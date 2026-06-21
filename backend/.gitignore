@@ -1,0 +1,33 @@
+# Python Virtual Environments
+venv/
+.env/
+env/
+.venv/
+ENV/
+
+# Large Neural Network Weights and Compiled Engines
+*.pt
+*.onnx
+*.engine
+*.pkl
+*.pth
+*.pb
+*.h5
+
+# Local Logs & Run Runtimes
+logs/
+*.log
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# macOS System Noise
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

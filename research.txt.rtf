@@ -1,0 +1,880 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Arial-BoldMT;\f1\froman\fcharset0 Times-Bold;\f2\fswiss\fcharset0 ArialMT;
+\f3\froman\fcharset0 Times-Roman;\f4\fnil\fcharset0 AppleColorEmoji;\f5\fswiss\fcharset0 Arial-ItalicMT;
+}
+{\colortbl;\red255\green255\blue255;\red24\green24\blue24;\red0\green0\blue0;\red52\green55\blue54;
+\red246\green249\blue252;\red183\green187\blue184;\red0\green0\blue233;}
+{\*\expandedcolortbl;;\cssrgb\c12157\c12157\c12157;\cssrgb\c0\c0\c0;\cssrgb\c26667\c27843\c27451;
+\cssrgb\c97255\c98039\c99216;\cssrgb\c76863\c78039\c77255;\cssrgb\c0\c0\c93333;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid1\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat0\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid301\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid401\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid5}
+{\list\listtemplateid6\listhybrid{\listlevel\levelnfc0\levelnfcn0\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{decimal\}}{\leveltext\leveltemplateid501\'01\'00;}{\levelnumbers\'01;}\fi-360\li720\lin720 }{\listname ;}\listid6}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}{\listoverride\listid6\listoverridecount0\ls6}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs64 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Architectural Concept Note: Automated Photo Identification and Classification for Traffic Violations Using Computer Vision
+\f1\fs48 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f0 \cf2 \strokec2 Executive Overview and Contextual Architecture
+\f1\fs36 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 Bengaluru, globally recognized as the "Silicon Valley of India," faces a compounding infrastructural crisis driven by rapid economic expansion and a vehicle population that now exceeds 10 million
+\fs19\fsmilli9600 \cf4 \super \strokec4 1
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . While the annual population growth rate of the city stands at 3.7%, the growth rate of registered vehicles accelerates at approximately 10%, culminating in a total of over 1.25 crore vehicles navigating a constrained road network of nearly 14,000 kilometers
+\fs19\fsmilli9600 \cf4 \super \strokec4 2
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . To manage this immense volume, the Bengaluru Traffic Police (BTP) has historically relied on initiatives like the B-TRAC project, which utilized a Rs. 217 crore budget to establish the Traffic Management Centre (TMC) on Infantry Road and deploy centrally controlled signaling systems
+\fs19\fsmilli9600 \cf4 \super \strokec4 3
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . Subsequent implementations of Intelligent Traffic Management Systems (ITMS) have achieved notable successes, such as issuing over 50 lakh challans and recovering approximately Rs. 38 crores in fines through automated red-light and speed violation detection
+\fs19\fsmilli9600 \cf4 \super \strokec4 6
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . However, the sheer scale of the ingested traffic data has exposed a critical operational bottleneck: manual review fatigue.
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Traditional enforcement mechanisms require operators at the TMC to manually verify incidents captured by cameras across the city
+\fs19\fsmilli9600 \cf4 \super \strokec4 3
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . Camera hardware inevitably captures degraded imagery due to nighttime conditions, heavy monsoon rains, or erratic vehicle positioning
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . When automated Automatic Number Plate Recognition (ANPR) systems misread a license plate\'97such as confusing the registration of a CB300R motorcycle with an Access 125 scooter due to a single character error\'97it triggers a chain reaction of manual appeals, email correspondence from aggrieved citizens, and intensive human intervention
+\fs19\fsmilli9600 \cf4 \super \strokec4 8
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The core pain point for the BTP is not a lack of data, but the cognitive load required to process it. The primary objective of an advanced computer vision architecture is not merely to draw bounding boxes around vehicles, but to execute straight-through processing (STP) that eliminates human validation for the vast majority of generated traffic challans.
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 To achieve this in the context of the Flipkart Gridlock Hackathon 2.0, the proposed architecture adopts a "Sponsor-First" methodology, directly addressing the manual review fatigue placed on BTP operators. Furthermore, the frontend execution utilizes the "AA Method" (Tangible Visuals), transforming complex tensor operations, optical character extraction, and vector embeddings into a highly interactive, intuitive React.js dashboard designed specifically for non-technical law enforcement personnel. The backend operates on an advanced, edge-deployed stack comprising PyTorch for deep learning inference, OpenCV for deterministic geometric transformations, LangChain and TimescaleDB-backed Retrieval-Augmented Generation (RAG) for temporal analytics, and Kubernetes over AWS Wavelength for scalable, ultra-low-latency deployment
+\fs19\fsmilli9600 \cf4 \super \strokec4 9
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 The following sections detail three highly innovative architectural features designed to demonstrate immense technical depth for the engineering review while prioritizing direct operational usability for the Bengaluru Traffic Police.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs48 \cf2 \strokec2 Feature 1: "Lumina-FDA" \'97 Zero-Reference Environmental Adaptation Engine
+\f1\fs36 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\fs37\fsmilli18667 \cf2 \strokec2 The Concept
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 Standard Convolutional Neural Network (CNN) and object detection models degrade catastrophically under adverse weather conditions such as rain and fog, or in low-light environments, which are highly prevalent in Bengaluru during the monsoon season and nighttime hours. "Lumina-FDA" is a unified preprocessing pipeline that mathematically restores severely degraded video frames in real-time before they reach the primary violation-detection network. The architecture bypasses traditional, computationally heavy image enhancement techniques by combining two cutting-edge PyTorch-based neural architectures: Zero-Reference Deep Curve Estimation (Zero-DCE) for low-light enhancement
+\fs19\fsmilli9600 \cf4 \super \strokec4 12
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2  and Fourier Domain Adaptation (FDA) for weather mitigation
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Zero-DCE formulates low-light image enhancement as an image-specific curve estimation task, utilizing a lightweight neural network to directly map an input image to an enhanced output at the pixel level
+\fs19\fsmilli9600 \cf4 \super \strokec4 16
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . Unlike traditional methods that require paired ground-truth reference images for training, Zero-DCE operates without reference images, making it exceptionally fast and suitable for real-time video processing
+\fs19\fsmilli9600 \cf4 \super \strokec4 14
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The ultra-light backbone uses minimal convolutions\'97some implementations utilizing as few as 58 weights\'97to produce a compact enhancement tensor
+\fs19\fsmilli9600 \cf4 \super \strokec4 17
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . Simultaneously, FDA addresses domain shifts caused by rain or fog by computing the Fast Fourier Transform (FFT) of the input image
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . It swaps the low-frequency amplitude components of the adverse weather image (which contain the visual "style" of the weather) with those of a clear target domain, while preserving the high-frequency phase components that contain the geometric "content" (such as the edges of vehicles and pedestrians)
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 How it Solves the Sponsor's Pain Point
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 The leading cause of manual review fatigue at the BTP TMC is the "squint factor." Operators are routinely forced to manually enhance, brighten, or zoom into blurry, dark, or foggy CCTV frames to legally verify a license plate, the absence of a seatbelt, or a helmet violation before officially issuing a challan. By autonomously neutralizing environmental variables, the Lumina-FDA pipeline ensures that the downstream vision models\'97and the human operators overseeing them\'97only interact with daylight-equivalent, crystal-clear frames. This drastically reduces the false-negative rate of the detection models and eliminates the countless hours operators currently spend manually discarding "unreadable" or "blurry" footage.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 The Visual/Frontend Component
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 During a fast-paced three-minute hackathon demonstration, translating deep mathematical transformations into a tangible user experience is critical. This feature will be presented on the React.js dashboard as the "Night-to-Day Slider."
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 The dashboard will feature a prominent video feed utilizing a customized react-compare-slider component. As the demonstration begins, the interface will display a heavily degraded, pitch-black, and rain-distorted traffic feed from a BTP camera. The system will intentionally show the raw YOLOv12 model failing to detect any vehicles or violations. The presenter will then drag the vertical slider across the React canvas from right to left. As the slider moves, the exact same video feed will instantly render as a brightly lit, perfectly clear scene. Neon bounding boxes will immediately snap onto helmets, seatbelts, and license plates. A real-time telemetry widget built with the recharts library will display the frames-per-second (FPS) remaining stable at 30+ FPS, proving to the engineering judges that the Zero-DCE/FDA pipeline adds near-zero latency overhead to the inference loop.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 High-Level Execution
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 The execution of the Lumina-FDA pipeline relies on a tightly coupled integration of OpenCV and PyTorch.
+\f3\fs24 \cf0 \strokec3 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0
+\f0\b\fs29\fsmilli14667 \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Frame Ingestion & Triage:
+\f2\b0  OpenCV captures the raw RTSP video stream. A lightweight heuristic checks the global pixel intensity and edge variance. If the intensity falls below a predefined threshold, or if the variance indicates atmospheric scattering (fog/rain), the frame is converted to a PyTorch tensor and routed to the Lumina-FDA pipeline.\cf0 \strokec3 \
+\ls1\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Low-Light Enhancement (Zero-DCE):
+\f2\b0  The tensor is passed through the Zero-DCE CNN. PyTorch applies the estimated spatial curves pixel-wise to dynamically adjust the dynamic range, illuminating the dark regions without overexposing already bright areas such as streetlights or headlights
+\fs19\fsmilli9600 \cf4 \super \strokec4 14
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\ls1\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Weather Mitigation (FDA):
+\f2\b0  The PyTorch torch.fft.fftn function computes the 2D discrete Fourier transform of the frame. The central low-frequency amplitudes are attenuated and mapped closer to a clear-weather prior distribution
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\ls1\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Inverse Transform:
+\f2\b0  An Inverse Fast Fourier Transform (IFFT) reconstitutes the spatial image
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\ls1\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	5	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Handoff:
+\f2\b0  The restored tensor is converted back to an OpenCV format and handed to the primary object detection network.\cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 The quantitative impact of such domain adaptation is substantial, as demonstrated in benchmark studies utilizing FDA on adverse weather datasets.
+\f3\fs24 \cf0 \strokec3 \
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2160
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx4320
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx6480
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Performance Metric
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Baseline Model Performance
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Performance with FDA Enhancement
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Percentage Improvement
+\f3\b0\fs24 \cf0 \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2160
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx4320
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx6480
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Precision
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 68.42%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 76.11%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 +7.69%
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\f3\fs24 \cf0 \nosupersub \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2160
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx4320
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx6480
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Recall
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 54.20%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 74.11%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 +19.91%
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\f3\fs24 \cf0 \nosupersub \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2160
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx4320
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx6480
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 mAP50
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 62.15%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 78.00%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 +15.85%
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\f3\fs24 \cf0 \nosupersub \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2160
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx4320
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx6480
+\clvertalt \clcbpat5 \clwWidth2620\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 mAP50-95
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 35.40%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 59.21%
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 +23.81%
+\fs19\fsmilli9600 \cf4 \super \strokec4 7
+\f3\fs24 \cf0 \nosupersub \strokec3 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs48 \cf2 \strokec2 Feature 2: "Omni-Gaze" \'97 Contextual Multi-Stage Violation & Perspective-Corrected OCR Pipeline
+\f1\fs36 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\fs37\fsmilli18667 \cf2 \strokec2 The Concept
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 A basic YOLO bounding-box implementation is insufficient for the chaotic and densely packed nature of Indian traffic. Detecting a "person" and a "motorcycle" in a frame does not automatically equate to a triple-riding violation, nor does detecting a "helmet" mean the rider is actually wearing it securely. Furthermore, evaluating red-light violations or wrong-side driving requires temporal tracking across multiple frames, not just static object detection.
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 "Omni-Gaze" introduces a hierarchical relational network atop the newly released YOLOv12 architecture, combined with deterministic OpenCV geometric unwarping and Transformer-based Optical Character Recognition (TrOCR). YOLOv12 is selected for its Attention-Centric (A2) framework and Residual Efficient Layer Aggregation Networks (R-ELAN), which drastically outperform older YOLO versions in crowded, multi-class environments while maintaining edge-deployment latency
+\fs19\fsmilli9600 \cf4 \super \strokec4 19
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The system identifies motorcycles, riders, helmets, seatbelts, traffic lights, and license plates. It then utilizes specific algorithms to classify complex violations.
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 For license plate extraction, standard OCR engines like Tesseract frequently fail when faced with the skewed, warped, or partially obscured license plates typical of Indian roadways. Omni-Gaze utilizes an OpenCV algorithmic layer to find the four corners of a skewed plate, applies a perspective transform to flatten it
+\fs19\fsmilli9600 \cf4 \super \strokec4 22
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 , and passes the normalized, high-resolution crop to a Vision Transformer (TrOCR). Unlike CNN-based OCR that struggles with sequential context, the TrOCR uses a vision encoder to extract image features and a sequence-to-sequence decoder to generate the text string, significantly reducing the character error rate
+\fs19\fsmilli9600 \cf4 \super \strokec4 24
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 How it Solves the Sponsor's Pain Point
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 The primary failure point of traditional ANPR systems in Bengaluru is the high error rate on slanted or non-standard license plates, resulting in incorrect challans being mailed to innocent citizens
+\fs19\fsmilli9600 \cf4 \super \strokec4 8
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . This generates massive public backlash and requires TMC operators to manually review dispute tickets. By flattening the plate via OpenCV before OCR, and by using a Transformer model that reads whole sequences, Omni-Gaze achieves near-perfect accuracy
+\fs19\fsmilli9600 \cf4 \super \strokec4 22
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . Furthermore, the hierarchical mapping logic prevents false positives\'97such as flagging a pedestrian walking behind a motorcycle as a "triple rider"\'97ensuring that every generated alert is actionable and legally sound without requiring human verification.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 The Visual/Frontend Component
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 To effectively demonstrate this backend complexity, Omni-Gaze will be showcased via an "Exploded Relational View" on the React.js dashboard.
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 When a violation occurs in the main React video player, the video will automatically pause. A sidebar built using framer-motion (a popular React animation library) will smoothly slide into view, displaying a 3D-style structural breakdown of the incident's logic. Rather than just showing a highlighted box, the interface will display a hierarchy tree proving how the AI reached its conclusion:
+\f3\fs24 \cf0 \strokec3 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls2\ilvl0
+\f0\b\fs29\fsmilli14667 \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Parent Node:
+\f2\b0  Motorcycle ID: #442\cf0 \strokec3 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls3\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Child Node 1:
+\f2\b0  Rider (Status: Helmet Verified 
+\f4 \uc0\u9989 
+\f2 )\cf0 \strokec3 \
+\ls3\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Child Node 2:
+\f2\b0  Pillion 1 (Status: No Helmet 
+\f4 \uc0\u10060 
+\f2 )\cf0 \strokec3 \
+\ls3\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Child Node 3:
+\f2\b0  Pillion 2 (Status: No Helmet 
+\f4 \uc0\u10060 
+\f2 ) -> 
+\f0\b TRIPLE RIDING TRIGGERED
+\f2\b0 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 Simultaneously, a "Picture-in-Picture" (PiP) module will dynamically display the OCR sequence. It will show the raw, heavily skewed license plate cropped from the frame. A green wireframe will draw over the four corners of the plate, and in a smooth React animation, the skewed polygon will stretch and flatten into a perfect rectangle. The final text string (e.g., KA-03-KY-1234) will type out below it, proving the effectiveness of the OpenCV warping pipeline to the technical judges.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 High-Level Execution
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 The Omni-Gaze pipeline executes a sequence of advanced computer vision tasks orchestrating both deep learning models and traditional image processing.
+\f3\fs24 \cf0 \strokec3 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls4\ilvl0
+\f0\b\fs29\fsmilli14667 \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 YOLOv12 Inference & Tracking:
+\f2\b0  The PyTorch YOLOv12 model runs inference to output bounding boxes for multiple classes. Concurrently, a tracking algorithm (such as Deep SORT or ByteTrack) assigns unique IDs to vehicles to maintain object permanence across frames
+\fs19\fsmilli9600 \cf4 \super \strokec4 26
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\ls4\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Relational Violation Logic:
+\f2\b0  Custom Python logic determines the violation based on spatial and temporal relationships.\cf0 \strokec3 \
+\ls4\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Perspective Correction:
+\f2\b0  For license plates, OpenCV (cv2.Canny, cv2.findContours) isolates the exact quadrilateral of the plate
+\fs19\fsmilli9600 \cf4 \super \strokec4 28
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The cv2.approxPolyDP function identifies the four vertices
+\fs19\fsmilli9600 \cf4 \super \strokec4 28
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The cv2.getPerspectiveTransform function computes the transformation matrix, and cv2.warpPerspective applies it, correcting the affine and perspective distortion
+\fs19\fsmilli9600 \cf4 \super \strokec4 22
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\ls4\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 TrOCR Extraction:
+\f2\b0  The flattened plate crop is passed to the TrOCR processor. The vision encoder extracts features, and the sequence-to-sequence decoder predicts the final text array, successfully parsing Indian license plate formats
+\fs19\fsmilli9600 \cf4 \super \strokec4 24
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 The specific violation classification relies on distinct geometric and temporal rulesets, ensuring robust detection across various traffic laws.
+\f3\fs24 \cf0 \strokec3 \
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Violation Type
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Detection Logic Mechanism
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Required Components
+\f3\b0\fs24 \cf0 \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Helmet / Triple Riding
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Intersection over Union (IoU) mapping. If the centroid of a Person bounding box falls within a Motorcycle bounding box, they are linked. If three persons link to one motorcycle, a triple ride is flagged. Helmet boxes must overlap the upper 20% of a linked Person box to register compliance
+\fs19\fsmilli9600 \cf4 \super \strokec4 30
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 YOLOv12 (Classes: Person, Motorcycle, Helmet), IoU Calculation Script.
+\f3\fs24 \cf0 \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Red-Light Jumping
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Digital Tripwire. The system identifies the traffic light state. If red, a vertical Y-coordinate line is established. If a tracked vehicle's bottom Y-coordinate crosses from before the line to after the line while the light is red, a violation is recorded
+\fs19\fsmilli9600 \cf4 \super \strokec4 26
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 YOLOv12, Object Tracker (Deep SORT), Coordinate History Array.
+\f3\fs24 \cf0 \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Wrong-Side Driving
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Trajectory Analysis. The system monitors the movement vector of the tracked vehicle ID. If the vector direction opposes the predefined legal flow direction for that specific lane polygon, it flags a violation.
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Object Tracker, Polygon Region of Interest (ROI) Mapping.
+\f3\fs24 \cf0 \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Seatbelt Non-Compliance
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Cabin Interior Detection. A specialized YOLO head looks specifically through the windshield Region of Interest of a detected 4-wheeler to identify the presence of the diagonal seatbelt strap across the driver's torso
+\fs19\fsmilli9600 \cf4 \super \strokec4 32
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 YOLOv12 (Classes: Car, Driver, Seatbelt), High-resolution frame crop.
+\f3\fs24 \cf0 \strokec3 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs48 \cf2 \strokec2 Feature 3: "Chronos-RAG" \'97 Temporal Conversational Analytics & Auto-Ticketing Agent
+\f1\fs36 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\fs37\fsmilli18667 \cf2 \strokec2 The Concept
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 Traditional traffic management dashboards force operators to manually filter through date ranges, vehicle classes, and violation types using rigid drop-down menus to compile end-of-day analytics or file legal First Information Reports (FIRs)
+\fs19\fsmilli9600 \cf4 \super \strokec4 32
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . "Chronos-RAG" revolutionizes this by leveraging a state-of-the-art Retrieval-Augmented Generation (RAG) architecture tailored specifically for time-series events. It utilizes LangChain, OpenAI or local Large Language Models (LLMs), and PostgreSQL augmented with the pgvector and TimescaleDB extensions
+\fs19\fsmilli9600 \cf4 \super \strokec4 11
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Every time the Omni-Gaze pipeline detects a violation, the metadata\'97including the timestamp, location coordinates, violation type, vehicle ID, extracted text, and bounding box arrays\'97is embedded as a vector and stored in TimescaleDB
+\fs19\fsmilli9600 \cf4 \super \strokec4 11
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . While standard vector databases struggle with chronological filtering, TimescaleDB partitions this vector data by time (hypertables), solving the massive performance bottleneck associated with querying sequential events
+\fs19\fsmilli9600 \cf4 \super \strokec4 11
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . A LangChain SQL Agent equipped with tool-calling capabilities is deployed on top of this database, enabling natural language interactions with structured traffic data
+\fs19\fsmilli9600 \cf4 \super \strokec4 37
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 How it Solves the Sponsor's Pain Point
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 The manual drafting of daily reports, legal notices, and compliance analytics consumes a vast portion of a BTP officer's shift. Chronos-RAG transitions the TMC system from a tedious "click-and-search" paradigm to a fluid "conversational command" paradigm. If a senior officer requests a report on the effectiveness of a new traffic initiative (e.g., assessing if wrong-side driving decreased after installing new signage), the operator does not need to export CSVs or build pivot tables. They simply ask the system in plain English or Kannada. Furthermore, the LLM autonomously drafts legally sound e-challan descriptions based on the extracted vision data, completely removing the operator's data-entry burden and streamlining the postal or SMS notification workflow
+\fs19\fsmilli9600 \cf4 \super \strokec4 25
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 The Visual/Frontend Component
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 This feature will be demonstrated via the "Traffic-GPT Overlay" on the React application.
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 On the dashboard, a sleek chat interface persists on the right-hand side of the screen. The presenter will type a complex natural language query into the chat box, such as:
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f5\i\fs29\fsmilli14667 \cf2 \strokec2 "Show me a breakdown of all wrong-side driving and helmet violations at the Infantry Road junction between 8 AM and 10 AM today, and compare it to the same time window last Tuesday."
+\f3\i0\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 The frontend will stream the LLM's thought process via WebSockets, creating an engaging live experience. Within seconds, the chat interface will not only reply with a textual summary but will dynamically render a Recharts bar graph directly inside the chat window, illustrating the data.
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 To demonstrate the auto-ticketing feature, the presenter will click on a specific violation data point from the graph. The LLM will instantly generate a ready-to-mail legal notice: 
+\f5\i "Notice: Vehicle KA-01-AB-9999 was recorded at 08:14 AM on Infantry Road committing a Section 119/177 MV Act violation (Wrong Side Driving). Photographic evidence attached."
+\f2\i0  The presenter will then click a single "Approve & Dispatch" button, demonstrating the end-to-end automation of the e-challan generation workflow, proving that the system can immediately interface with the state's postal or SMS APIs
+\fs19\fsmilli9600 \cf4 \super \strokec4 6
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 High-Level Execution
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 The execution of Chronos-RAG involves seamlessly connecting vision outputs to database storage and LLM retrieval logic.
+\f3\fs24 \cf0 \strokec3 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls5\ilvl0
+\f0\b\fs29\fsmilli14667 \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Data Ingestion & Embedding:
+\f2\b0  The JSON output from the YOLO/OpenCV pipeline is parsed. A unique identifier is generated based on the specific incident timestamp using TimescaleDB's uuid_from_time function
+\fs19\fsmilli9600 \cf4 \super \strokec4 11
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The text metadata is passed through an embedding model and stored in the pgvector columns alongside standard relational data.\cf0 \strokec3 \
+\ls5\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 LangChain SQL Agent Orchestration:
+\f2\b0  When a user submits a natural language query, the LangChain create_sql_agent is invoked
+\fs19\fsmilli9600 \cf4 \super \strokec4 37
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The LLM analyzes the prompt and utilizes injected database tools (e.g., sql_db_list_tables, sql_db_schema) to construct a valid, syntactically correct PostgreSQL query
+\fs19\fsmilli9600 \cf4 \super \strokec4 38
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\ls5\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Temporal Vector Search:
+\f2\b0  For queries requiring semantic matching within a specific time frame, the LangChain agent constructs a query that filters the TimescaleDB partitions by the datetime range 
+\f5\i before
+\f2\i0  executing the K-Nearest Neighbor (KNN) vector similarity search. This three-step process\'97filtering partitions, performing similarity search, and combining results\'97ensures ultra-fast retrieval even across millions of records
+\fs19\fsmilli9600 \cf4 \super \strokec4 11
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\ls5\ilvl0
+\f0\b \cf2 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Response Generation & Formatting:
+\f2\b0  The database returns the structured data. The LLM synthesizes this into a natural language response or formats it as JSON chart data. A FastAPI backend streams this payload to the React.js client asynchronously
+\fs19\fsmilli9600 \cf4 \super \strokec4 34
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .\cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \strokec2 The integration of TimescaleDB offers significant advantages over standard vector databases for traffic law enforcement applications, where time is the most critical axis of measurement.
+\f3\fs24 \cf0 \strokec3 \
+\
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Database Architecture
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Temporal Search Methodology
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Performance on Time-Series Data
+\f3\b0\fs24 \cf0 \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 Standard Vector DB
+\f2\b0  (e.g., Pinecone, standard pgvector)
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Performs similarity search across the entire vector space first, then applies time-based metadata filters post-retrieval.
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Inefficient. Scanning millions of non-relevant historical records causes massive latency spikes.
+\f3\fs24 \cf0 \strokec3 \cell \row
+
+\itap1\trowd \taflags1 \trgaph108\trleft-108 \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx2880
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx5760
+\clvertalt \clcbpat5 \clwWidth3660\clftsWidth3 \clbrdrt\brdrs\brdrw20\brdrcf6 \clbrdrl\brdrs\brdrw20\brdrcf6 \clbrdrb\brdrs\brdrw20\brdrcf6 \clbrdrr\brdrs\brdrw20\brdrcf6 \clpadt160 \clpadl240 \clpadb160 \clpadr240 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\sa160\partightenfactor0
+
+\f0\b\fs29\fsmilli14667 \cf2 \strokec2 TimescaleDB + pgvector
+\f3\b0\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Partitions data by time (hypertables). Filters out irrelevant time partitions 
+\f5\i first
+\f2\i0 , then performs similarity search only within the relevant timeframe
+\fs19\fsmilli9600 \cf4 \super \strokec4 11
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \cell 
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 Highly optimized. Enables instant retrieval of events constrained by precise date and time boundaries
+\fs19\fsmilli9600 \cf4 \super \strokec4 11
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \cell \lastrow\row
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs48 \cf2 \strokec2 Scalability and Edge Deployment Infrastructure
+\f1\fs36 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 To ensure these highly complex computer vision and LLM pipelines can operate in a live production environment handling thousands of camera feeds across Bengaluru without crashing, the architecture mandates a robust, distributed infrastructure. Processing high-resolution video streams requires specialized deployment strategies to prevent bandwidth saturation and ensure ultra-low-latency inference.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 AWS Wavelength and Edge Inference
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 Sending raw 4K video streams from the 14,000 kilometers of Bengaluru roads directly to a centralized cloud server would saturate municipal bandwidth and introduce massive latency, rendering real-time violation detection impossible
+\fs19\fsmilli9600 \cf4 \super \strokec4 2
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The solution utilizes AWS Wavelength and Amazon Elastic Kubernetes Service (EKS)
+\fs19\fsmilli9600 \cf4 \super \strokec4 9
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 AWS Wavelength brings AWS compute and storage services to the edge of communication service providers' 5G networks
+\fs19\fsmilli9600 \cf4 \super \strokec4 9
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . By deploying the PyTorch YOLOv12 and Lumina-FDA models on EKS nodes located within these Wavelength Zones, the video feed is processed mere milliseconds from the physical traffic camera, acting as a Multi-access Edge Computing (MEC) site
+\fs19\fsmilli9600 \cf4 \super \strokec4 10
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . The data from the cameras reaches the application servers without ever leaving the telecommunications network, avoiding multiple internet hops
+\fs19\fsmilli9600 \cf4 \super \strokec4 9
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . Once the local inference detects an incident, only the lightweight metadata\'97the JSON payload of the violation details and the highly compressed, cropped image of the license plate\'97is transmitted back over secure tunnels to the central AWS Region for long-term storage in TimescaleDB
+\fs19\fsmilli9600 \cf4 \super \strokec4 42
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . This paradigm shift from centralized processing to edge processing is critical for scaling the system city-wide.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 Asynchronous Task Queues with Celery and Redis
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 To ensure the React.js frontend remains completely non-blocking and highly responsive for the TMC operators, all heavy post-processing tasks are decoupled from the main application thread. The system utilizes FastAPI to provide asynchronous request handling, which serves as the primary gateway between the frontend and the backend
+\fs19\fsmilli9600 \cf4 \super \strokec4 34
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 When a complex operation is required\'97such as executing the TrOCR inference on a difficult license plate or running an extensive LangChain database query for analytics\'97FastAPI pushes the task to a Redis message broker
+\fs19\fsmilli9600 \cf4 \super \strokec4 34
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . Celery workers, running on isolated Kubernetes pods, pick up these tasks from the Redis queue, execute the necessary computations, and return the results
+\fs19\fsmilli9600 \cf4 \super \strokec4 34
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 . This architecture guarantees that sudden spikes in traffic violations (e.g., during peak rush hour) do not degrade the performance of the dashboard. The Kubernetes Horizontal Pod Autoscaler can dynamically spin up additional Celery worker pods to handle increased loads, isolating the query-serving infrastructure from the data ingestion pipelines
+\fs19\fsmilli9600 \cf4 \super \strokec4 34
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 .
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa320\partightenfactor0
+
+\f0\b\fs37\fsmilli18667 \cf2 \strokec2 Comprehensive Metric Observability
+\f1\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 To maintain the health and legal integrity of the system, comprehensive observability tools are mandatory. Prometheus and Grafana are deployed within the Kubernetes cluster to continuously monitor critical telemetry. This includes tracking hardware utilization across the GPU edge nodes, monitoring YOLOv12 inference times to ensure they remain within the target threshold of single-digit milliseconds
+\fs19\fsmilli9600 \cf4 \super \strokec4 9
+\fs29\fsmilli14667 \cf2 \nosupersub \strokec2 , and tracking OCR character error rates. If the system detects a spike in OCR failures at a specific junction, it can automatically alert the maintenance crew that a camera lens may require physical cleaning, ensuring the continuous operational readiness of the BTP's enforcement network.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs48 \cf2 \strokec2 Strategic Conclusion
+\f1\fs36 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs29\fsmilli14667 \cf2 \strokec2 The "Automated Photo Identification and Classification" system outlined in this architectural concept note transcends standard tutorial-level computer vision scripts by addressing the harsh realities of urban traffic management in India. By deeply integrating Lumina-FDA for unprecedented weather and lighting resilience, Omni-Gaze for mathematically robust perspective correction and multi-class relational mapping, and Chronos-RAG for conversational, temporal analytics, the architecture systematically dismantles the core operational bottlenecks of the Bengaluru Traffic Police.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa340\partightenfactor0
+
+\f2\fs29\fsmilli14667 \cf2 \strokec2 This infrastructure is not merely a bounding-box detection tool; it is a comprehensive, edge-deployed automation engine designed to operate securely and efficiently across a massive metropolis. By utilizing AWS Wavelength for zero-latency processing and translating deep learning tensors into an interactive, highly visual React.js interface, this solution guarantees a monumental reduction in manual review fatigue for the TMC operators. The architecture promises to dramatically accelerate the issuance of verifiable, dispute-free e-challans, thereby enforcing traffic discipline, increasing municipal revenue collection, and advancing the fundamental safety of Bengaluru's roadways for its citizens.
+\f3\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa340\partightenfactor0
+
+\f0\b\fs32 \cf0 Works cited
+\f1\fs24 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls6\ilvl0
+\f2\b0\fs32 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	1	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Smart Traffic Management in Bengaluru | PDF - Scribd, {\field{\*\fldinst{HYPERLINK "https://www.scribd.com/document/920812240/Prw"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.scribd.com/document/920812240/Prw}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	2	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Home minister Priyank Kharge wants strict enforcement of traffic rules in Bengaluru, {\field{\*\fldinst{HYPERLINK "https://www.newindianexpress.com/cities/bengaluru/2026/Jun/13/home-minister-priyank-kharge-wants-strict-enforcement-of-traffic-rules-in-bengaluru"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.newindianexpress.com/cities/bengaluru/2026/Jun/13/home-minister-priyank-kharge-wants-strict-enforcement-of-traffic-rules-in-bengaluru}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	3	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Bangalore City Traffic Police - Wikipedia, {\field{\*\fldinst{HYPERLINK "https://en.wikipedia.org/wiki/Bangalore_City_Traffic_Police"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://en.wikipedia.org/wiki/Bangalore_City_Traffic_Police}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	4	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Know Your City: A museum that chronicles the history of traffic management in Bengaluru | Bangalore News - The Indian Express, {\field{\*\fldinst{HYPERLINK "https://indianexpress.com/article/cities/bangalore/know-your-city-museum-history-of-traffic-management-bengaluru-9855026/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://indianexpress.com/article/cities/bangalore/know-your-city-museum-history-of-traffic-management-bengaluru-9855026/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	5	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 \'93B-TRAC \'96 Technology Driven Traffic Management\'94, {\field{\*\fldinst{HYPERLINK "https://bprd.nic.in/uploads/pdf/201702101040338492118BTRACcoverpage.pdf"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://bprd.nic.in/uploads/pdf/201702101040338492118BTRACcoverpage.pdf}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	6	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 AI Use Case Compendium Book.cdr - NITI for States, {\field{\*\fldinst{HYPERLINK "https://www.nitiforstates.gov.in/public-assets/Best_Practices/Compendiums/Artificial%20Intelligence%20use%20case%20compendium.pdf"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.nitiforstates.gov.in/public-assets/Best_Practices/Compendiums/Artificial%20Intelligence%20use%20case%20compendium.pdf}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	7	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 TLDR: Traffic Light Detection using Fourier Domain Adaptation in Hostile WeatheR - arXiv, {\field{\*\fldinst{HYPERLINK "https://arxiv.org/html/2411.07901v1"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://arxiv.org/html/2411.07901v1}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	8	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 How to get rid of incorrect traffic violation challans in Bangalore? - Team-BHP, {\field{\*\fldinst{HYPERLINK "https://www.team-bhp.com/news/how-get-rid-incorrect-traffic-violation-challans-bangalore"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.team-bhp.com/news/how-get-rid-incorrect-traffic-violation-challans-bangalore}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	9	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Edge Computing with AWS Infrastructure Solutions - awsstatic.com, {\field{\*\fldinst{HYPERLINK "https://d1.awsstatic.com/product-marketing/Outposts/AWS%20Infrastructure%20Solution%20Brief.pdf"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://d1.awsstatic.com/product-marketing/Outposts/AWS%20Infrastructure%20Solution%20Brief.pdf}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	10	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 What AWS Wavelength EKS Actually Does and When to Use It - hoop.dev, {\field{\*\fldinst{HYPERLINK "https://hoop.dev/blog/what-aws-wavelength-eks-actually-does-and-when-to-use-it"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://hoop.dev/blog/what-aws-wavelength-eks-actually-does-and-when-to-use-it}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	11	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Timescale Vector x LangChain: Making PostgreSQL A Better Vector Database for AI Applications, {\field{\*\fldinst{HYPERLINK "https://www.langchain.com/blog/timescale-vector-x-langchain-making-postgresql-a-better-vector-database-for-ai-applications"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.langchain.com/blog/timescale-vector-x-langchain-making-postgresql-a-better-vector-database-for-ai-applications}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	12	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Li-Chongyi/Zero-DCE: Zero-DCE code and model - GitHub, {\field{\*\fldinst{HYPERLINK "https://github.com/Li-Chongyi/Zero-DCE"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://github.com/Li-Chongyi/Zero-DCE}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	13	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Zero DCE PyTorch Model - Model Zoo, {\field{\*\fldinst{HYPERLINK "https://modelzoo.co/model/zero-dce"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://modelzoo.co/model/zero-dce}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	14	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 BBM 444 \'96 Programming Assignment 4: Deep Low-light Image Enhancement, {\field{\*\fldinst{HYPERLINK "https://web.cs.hacettepe.edu.tr/~erkut/bbm444.s22/assgns/assgn4.pdf"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://web.cs.hacettepe.edu.tr/~erkut/bbm444.s22/assgns/assgn4.pdf}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	15	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Fourier Domain Adaptation for Traffic Light Detection in Adverse Weather - arXiv, {\field{\*\fldinst{HYPERLINK "https://arxiv.org/abs/2411.07901"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://arxiv.org/abs/2411.07901}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	16	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Efficient Gamma-Based Zero-Reference Deep Curve Estimation for Low-Light Image Enhancement - MDPI, {\field{\*\fldinst{HYPERLINK "https://www.mdpi.com/2076-3417/15/13/7382"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.mdpi.com/2076-3417/15/13/7382}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	17	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Towards Lightest Low-Light Image Enhancement Architecture for Mobile Devices - arXiv, {\field{\*\fldinst{HYPERLINK "https://arxiv.org/html/2507.04277v1"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://arxiv.org/html/2507.04277v1}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	18	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Condition-Invariant Semantic Segmentation - ETH Z\'fcrich, {\field{\*\fldinst{HYPERLINK "http://people.ee.ethz.ch/~csakarid/CISS/Condition-invariant_semantic_segmentation-Sakaridis+Bruggemann+Yu+Van_Gool-IEEE_TPAMI_2025.pdf"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 http://people.ee.ethz.ch/~csakarid/CISS/Condition-invariant_semantic_segmentation-Sakaridis+Bruggemann+Yu+Van_Gool-IEEE_TPAMI_2025.pdf}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	19	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Benchmarking YOLOv8\'96YOLOv12 for Real-Time Object Detection on Single-Board Computers - Preprints.org, {\field{\*\fldinst{HYPERLINK "https://www.preprints.org/manuscript/202605.0936"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.preprints.org/manuscript/202605.0936}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	20	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 YOLOv12: State-of-the-Art Object Detection Model, {\field{\*\fldinst{HYPERLINK "https://yolov12.com/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://yolov12.com/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	21	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 YOLO Evolution: A Comprehensive Benchmark and Architectural Review of YOLOv12, YOLO11, and Their Previous Versions - arXiv, {\field{\*\fldinst{HYPERLINK "https://arxiv.org/html/2411.00201v2"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://arxiv.org/html/2411.00201v2}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	22	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Perspective Transform Warping with OpenCV - Studyopedia, {\field{\*\fldinst{HYPERLINK "https://studyopedia.com/opencv/perspective-transform-warping-opencv/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://studyopedia.com/opencv/perspective-transform-warping-opencv/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	23	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Robust License Plate Recognition in OCC-Based Vehicle Networks Using Image Reconstruction - MDPI, {\field{\*\fldinst{HYPERLINK "https://www.mdpi.com/1424-8220/24/20/6568"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.mdpi.com/1424-8220/24/20/6568}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	24	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Intelligent Traffic Surveillance for Real-Time Vehicle Detection, License Plate Recognition, and Speed Estimation - arXiv, {\field{\*\fldinst{HYPERLINK "https://arxiv.org/html/2601.00344v1"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://arxiv.org/html/2601.00344v1}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	25	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Check & Pay Karnataka Traffic Challan Online - ACKO, {\field{\*\fldinst{HYPERLINK "https://www.acko.com/traffic-rules/e-challan-karnataka/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.acko.com/traffic-rules/e-challan-karnataka/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	26	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Building a Traffic-Light Violation Detector - Python in Plain English, {\field{\*\fldinst{HYPERLINK "https://python.plainenglish.io/automating-road-safety-traffic-light-violation-detector-973885dbe977"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://python.plainenglish.io/automating-road-safety-traffic-light-violation-detector-973885dbe977}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	27	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Challenges in Automatic License Plate Recognition System: An Indian Scenario | Request PDF - ResearchGate, {\field{\*\fldinst{HYPERLINK "https://www.researchgate.net/publication/354108281_Challenges_in_Automatic_License_Plate_Recognition_System_An_Indian_Scenario"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.researchgate.net/publication/354108281_Challenges_in_Automatic_License_Plate_Recognition_System_An_Indian_Scenario}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	28	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 License Plate Recognition with OpenCV and Tesseract OCR - GeeksforGeeks, {\field{\*\fldinst{HYPERLINK "https://www.geeksforgeeks.org/machine-learning/license-plate-recognition-with-opencv-and-tesseract-ocr/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.geeksforgeeks.org/machine-learning/license-plate-recognition-with-opencv-and-tesseract-ocr/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	29	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 License plate recognition using OpenCV - GitHub, {\field{\*\fldinst{HYPERLINK "https://github.com/ikajdan/license_plate_recognition"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://github.com/ikajdan/license_plate_recognition}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	30	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Deep Learning-Based Real-Time Detection of Helmet Non-Compliance and Triple Riding Violations in Traffic Surveillance Systems, {\field{\*\fldinst{HYPERLINK "https://ijdim.com/journal/index.php/ijdim/article/view/617"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://ijdim.com/journal/index.php/ijdim/article/view/617}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	31	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Discover Artificial Intelligence - Automatic two\uc0\u8209 wheeler rider identification and triple\u8209 riding detection in surveillance systems using deep\u8209 learning models, {\field{\*\fldinst{HYPERLINK "https://d-nb.info/1374268216/34"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://d-nb.info/1374268216/34}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	32	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Bengaluru Traffic Authority - Videonetics, {\field{\*\fldinst{HYPERLINK "https://www.videonetics.com/case-study/bengaluru-traffic-authority"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.videonetics.com/case-study/bengaluru-traffic-authority}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	33	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Mobility - Integrated Command and Control Centre (ICCC), {\field{\*\fldinst{HYPERLINK "https://iccc.niua.org/iccc/sector/use-case/815e6212def15fe76ed27cec7a393d59"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://iccc.niua.org/iccc/sector/use-case/815e6212def15fe76ed27cec7a393d59}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	34	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Engineering a Production RAG-Based Agent Platform - CEUR-WS.org, {\field{\*\fldinst{HYPERLINK "https://ceur-ws.org/Vol-4211/paper05.pdf"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://ceur-ws.org/Vol-4211/paper05.pdf}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	35	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Edit Fields (Set) integrations | Workflow automation with n8n, {\field{\*\fldinst{HYPERLINK "https://n8n.io/integrations/set/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://n8n.io/integrations/set/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	36	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Strategic traffic violation detection system - World Journal of Advanced Research and Reviews, {\field{\*\fldinst{HYPERLINK "https://wjarr.com/sites/default/files/fulltext_pdf/WJARR-2025-4298.pdf"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://wjarr.com/sites/default/files/fulltext_pdf/WJARR-2025-4298.pdf}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	37	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 create_sql_agent | langchain_community - LangChain Reference, {\field{\*\fldinst{HYPERLINK "https://reference.langchain.com/python/langchain-community/agent_toolkits/sql/base/create_sql_agent"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://reference.langchain.com/python/langchain-community/agent_toolkits/sql/base/create_sql_agent}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	38	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Build a SQL agent - Docs by LangChain, {\field{\*\fldinst{HYPERLINK "https://docs.langchain.com/oss/python/langchain/sql-agent"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://docs.langchain.com/oss/python/langchain/sql-agent}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	39	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Build a custom SQL agent - Docs by LangChain, {\field{\*\fldinst{HYPERLINK "https://docs.langchain.com/oss/python/langgraph/sql-agent"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://docs.langchain.com/oss/python/langgraph/sql-agent}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	40	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Divergent Technologies: IT Solutions Overview | PDF | Automation - Scribd, {\field{\*\fldinst{HYPERLINK "https://www.scribd.com/document/902940854/Divergent-Technologies-Limited-Portfolio"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.scribd.com/document/902940854/Divergent-Technologies-Limited-Portfolio}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	41	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 AWS Global Network, {\field{\*\fldinst{HYPERLINK "https://aws.amazon.com/about-aws/global-infrastructure/global-network/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://aws.amazon.com/about-aws/global-infrastructure/global-network/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	42	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Distributed inference with collaborative AI agents for Telco-powered Smart-X - AWS, {\field{\*\fldinst{HYPERLINK "https://aws.amazon.com/blogs/industries/distributed-inference-with-collaborative-ai-agents-for-telco-powered-smart-x/"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://aws.amazon.com/blogs/industries/distributed-inference-with-collaborative-ai-agents-for-telco-powered-smart-x/}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	43	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Real World Projects That Get You Hired as Python Developer - NareshIT, {\field{\*\fldinst{HYPERLINK "https://nareshit.com/blogs/real-world-projects-that-get-you-hired-as-a-python-developer"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://nareshit.com/blogs/real-world-projects-that-get-you-hired-as-a-python-developer}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	44	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Talent Skilled in TensorFlow - Reval, {\field{\*\fldinst{HYPERLINK "https://www.reval.site/talent/skilled-in/tensorflow?page=233"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.reval.site/talent/skilled-in/tensorflow?page=233}}
+\fs29\fsmilli14667 \
+\ls6\ilvl0
+\fs32 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	45	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 Back-end Developer (Python, FastAPI, Postgres) at SpeakUp - Remocate, {\field{\*\fldinst{HYPERLINK "https://www.remocate.app/jobs/backend-developer-python-fastapi-postgres-speakup"}}{\fldrslt \cf7 \ul \ulc7 \strokec7 https://www.remocate.app/jobs/backend-developer-python-fastapi-postgres-speakup}}
+\fs29\fsmilli14667 \
+}

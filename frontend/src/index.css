@@ -1,0 +1,60 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+body {
+  background-color: #f0f2f5;
+  color: #1e293b;
+}
+
+/* Custom scrollbar style for dashboard logs */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.6);
+  border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(40, 116, 240, 0.2);
+  border-radius: 4px;
+  border: 1px solid rgba(40, 116, 240, 0.05);
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(40, 116, 240, 0.5);
+}
+
+/* Custom glassmorphism cards */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Pulsing neon keyframes for alert indicators */
+@keyframes neon-glow-blue {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(40, 116, 240, 0.2), 0 0 10px rgba(40, 116, 240, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(40, 116, 240, 0.4), 0 0 20px rgba(40, 116, 240, 0.2);
+  }
+}
+
+.neon-glow-blue {
+  animation: neon-glow-blue 2s infinite ease-in-out;
+}
+
+/* Custom styling for Leaflet Map to make it grayscale and sleek */
+.leaflet-tile {
+  filter: grayscale(85%) brightness(95%) contrast(110%);
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}

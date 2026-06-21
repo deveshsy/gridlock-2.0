@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Technical Concept Note - dsy230106</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @media print {
+      body {
+        background-color: #ffffff;
+        color: #0f172a;
+      }
+      .page-break {
+        page-break-before: always;
+      }
+      .no-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased p-8 sm:p-16 max-w-4xl mx-auto">
+
+  <!-- Cover / Header Section -->
+  <div class="border-b-4 border-blue-600 pb-8 mb-12">
+    <div class="flex justify-between items-start">
+      <div>
+        <span class="text-xs font-bold tracking-widest text-blue-600 uppercase">Flipkart Gridlock Hackathon 2.0</span>
+        <h1 class="text-3xl font-extrabold text-slate-900 mt-2">TECHNICAL CONCEPT NOTE & PROTOTYPE PROPOSAL</h1>
+        <h2 class="text-xl font-semibold text-slate-600 mt-1">Theme 3: Automated Photo Identification & Classification for Traffic Violations</h2>
+      </div>
+      <div class="text-right text-sm text-slate-500 font-mono">
+        <div>Team ID: <strong class="text-slate-800 font-bold">dsy230106</strong></div>
+        <div>Prototype Round 2</div>
+        <div>Date: June 20, 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Executive Summary -->
+  <section class="mb-12">
+    <h3 class="text-lg font-bold text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-2 mb-4">1. Executive Summary & Problem Definition</h3>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      Bengaluru, India's tech capital, supports over 1.25 crore registered vehicles on a constrained road network of approximately 14,000 kilometers. To enforce traffic compliance, the Bengaluru Traffic Police (BTP) utilizes an Intelligent Traffic Management System (ITMS) that ingests millions of camera frames daily. However, the current system faces a major operational bottleneck: <strong>manual review fatigue</strong>.
+    </p>
+    <p class="text-slate-650 leading-relaxed text-sm">
+      Operators at the Traffic Management Centre (TMC) must manually inspect thousands of low-resolution, warped, or dark photos to verify license plates, helmet violations, and red-light jumping before issuing e-challans. Misclassifications lead to public disputes, while manual processing introduces latency and high operational costs.
+    </p>
+    
+    <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+      <h4 class="text-xs font-bold text-blue-800 uppercase tracking-wider mb-1">The Solution: ASTraM / OMNI-GAZE</h4>
+      <p class="text-xs text-blue-950 leading-relaxed">
+        OMNI-GAZE is a comprehensive computer vision and AI-powered operations dashboard that achieves <strong>straight-through processing (STP)</strong> of traffic violations. The solution integrates real-time Zero-Reference dynamic dynamic lighting normalization (Lumina-FDA), YOLOv12s relational heuristics, affine perspective-corrected Transformer OCR (TrOCR) for license plates, and a natural language TimescaleDB query agent (Chronos-RAG Copilot) for TMC operators.
+      </p>
+    </div>
+  </section>
+
+  <!-- System Architecture -->
+  <section class="mb-12 page-break">
+    <h3 class="text-lg font-bold text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-2 mb-4">2. End-to-End System Architecture</h3>
+    <p class="text-slate-650 leading-relaxed mb-6 text-sm">
+      The OMNI-GAZE system maps camera frame ingestion to real-time telemetry, spatial search, and chat-based operator commands:
+    </p>
+    
+    <div class="bg-slate-900 text-slate-200 rounded-lg p-5 mb-6 shadow-md overflow-x-auto">
+      <pre class="text-xs leading-5">
+[ CCTV Stream Ingestion (RTSP) ]
+              │
+              ▼
+    [ Lumina-FDA Preprocessing ] ────► (Night-to-Day Restoration Slider)
+              │
+              ▼
+   [ PyTorch YOLOv12 Inference ] ────► (Multi-Class Object Bounding Boxes)
+              │
+              ▼
+ [ Relational Violation Heuristics ] ──► (Triple Riding / No Helmet Checks)
+              │
+              ▼
+  [ OpenCV Perspective Unwarping ] ──► (License Plate Flattening)
+              │
+              ▼
+       [ TrOCR Engine ] ─────────────► (Text-String Extraction)
+              │
+              ▼
+  [ TimescaleDB Vector Hypertables ] ──► (Metadata & Coordinate Storing)
+              │
+              ▼
+   [ Chronos-RAG Copilot Agent ] ────► (LangChain SQL Query Interface)
+      </pre>
+    </div>
+  </section>
+
+  <!-- Preprocessing Engine -->
+  <section class="mb-12 page-break">
+    <h3 class="text-lg font-bold text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-2 mb-4">3. Preprocessing Engine: Lumina-FDA</h3>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      To handle low light, monsoons, shadows, and motion blur, raw video frames are preprocessed by the <strong>Lumina-FDA</strong> engine before downstream inference.
+    </p>
+
+    <h4 class="text-sm font-bold text-slate-800 mt-6 mb-2">Zero-Reference Deep Curve Estimation (Zero-DCE)</h4>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      Zero-DCE formulates low-light enhancement as an image-specific curve estimation task. It learns a mapping function $F(x, A)$ that outputs a set of pixel-wise curve parameter maps $A$ to iteratively adjust the dynamic range:
+    </p>
+    <div class="bg-slate-100 border border-slate-200 rounded p-3 text-center my-3 font-mono text-sm font-bold">
+      I<sub>n</sub>(x) = I<sub>n-1</sub>(x) + A<sub>n</sub>(x) I<sub>n-1</sub>(x)(1 - I<sub>n-1</sub>(x))
+    </div>
+    <p class="text-slate-650 leading-relaxed text-sm">
+      where I<sub>n</sub>(x) is the enhanced image at step n, and A<sub>n</sub>(x) represents the curve parameters at step n. This process illumination-corrects frames without paired clear-dark training sets, keeping latency under <strong>3ms</strong> per frame.
+    </p>
+
+    <h4 class="text-sm font-bold text-slate-800 mt-6 mb-2">Fourier Domain Adaptation (FDA)</h4>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      To mitigate rain and fog, the amplitude spectrum of the adverse weather target image is adapted using a clear weather source domain.
+      Given the Fast Fourier Transform (FFT) &fnof; of an image:
+    </p>
+    <div class="bg-slate-100 border border-slate-200 rounded p-3 text-center my-3 font-mono text-sm font-bold">
+      &fnof;(I) = &Alpha;(I) &middot; e<sup>i &Alpha;(I)</sup>
+    </div>
+    <p class="text-slate-650 leading-relaxed text-sm">
+      where &Alpha;(I) is the amplitude spectrum and &Alpha;(I) is the phase spectrum. FDA swaps the low-frequency amplitude of the weather-affected frame with the clear-sky amplitude:
+    </p>
+    <div class="bg-slate-100 border border-slate-200 rounded p-3 text-center my-3 font-mono text-sm font-bold">
+      &Alpha;<sub>adapted</sub> = (1 - M) &Alpha;(I<sub>target</sub>) + M &Alpha;(I<sub>clear</sub>)
+    </div>
+    <p class="text-slate-650 leading-relaxed text-sm">
+      where M is a binary mask controlling the boundaries of amplitude replacement. Reconstructing the image via Inverse FFT (IFFT) preserves sharp spatial edges (like license plate borders) while stripping fog and rain noise.
+    </p>
+  </section>
+
+  <!-- Violation Detection & OCR -->
+  <section class="mb-12 page-break">
+    <h3 class="text-lg font-bold text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-2 mb-4">4. Multi-Stage Violation Detection & OCR Pipeline</h3>
+    <p class="text-slate-650 leading-relaxed mb-6 text-sm">
+      The core detection engine runs PyTorch-based YOLOv12s models optimized with Attention-Centric (A2) frameworks and R-ELAN aggregators to maximize multi-scale class recall.
+    </p>
+
+    <h4 class="text-sm font-bold text-slate-800 mb-2">Relational Violation Heuristics</h4>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      <strong>1. Triple Riding:</strong> The model detects the bounding boxes of motorcycles (B<sub>M</sub>) and riders (B<sub>P</sub>). Intersection over Union (IoU) is computed:
+    </p>
+    <div class="bg-slate-100 border border-slate-200 rounded p-3 text-center my-3 font-mono text-xs font-bold">
+      IoU(B<sub>P</sub>, B<sub>M</sub>) = Area(B<sub>P</sub> &cap; B<sub>M</sub>) / Area(B<sub>P</sub> &cup; B<sub>M</sub>)
+    </div>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      If IoU(B<sub>P</sub>, B<sub>M</sub>) &gt; 0.15 for three or more unique person IDs associated with one motorcycle ID, a <strong>Triple Riding</strong> violation is flagged.
+    </p>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      <strong>2. Helmet Non-Compliance:</strong> For each linked rider bounding box B<sub>Rider</sub>, the system crops the head region of interest (ROI<sub>Head</sub>), defined as the top 20% of the Y-axis height. The model evaluates whether a helmet class box (B<sub>Helmet</sub>) overlaps the head region:
+    </p>
+    <div class="bg-slate-100 border border-slate-200 rounded p-3 text-center my-3 font-mono text-xs font-bold">
+      IoU(B<sub>Helmet</sub>, ROI<sub>Head</sub>) &ge; 0.15
+    </div>
+    <p class="text-slate-650 leading-relaxed text-sm">
+      If no overlap is detected, a <strong>No Helmet</strong> violation is logged.
+    </p>
+
+    <h4 class="text-sm font-bold text-slate-800 mt-6 mb-2">Perspective-Corrected OCR</h4>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      Number plates on turning or accelerating vehicles are highly skewed. Omni-Gaze performs <strong>Perspective-Correction Warping</strong> before text extraction:
+    </p>
+    <ul class="list-decimal list-inside space-y-1.5 text-xs text-slate-700 pl-4 mb-4">
+      <li><strong>Contour Analysis:</strong> Detects the four corners of the license plate polygon using edge-gradient thresholds.</li>
+      <li><strong>Transformation Matrix:</strong> Estimates a 3x3 transformation matrix M satisfying target rectangular dimensions.</li>
+      <li><strong>Warp Perspective:</strong> Executes cv2.warpPerspective to obtain a perfectly flat license plate crop.</li>
+      <li><strong>Sequence-to-Sequence OCR:</strong> Feeds the cropped image into <strong>TrOCR</strong>. The vision encoder extracts visual features into sequence patches, and the language decoder predicts characters sequentially, eliminating character recognition errors on non-standard fonts.</li>
+    </ul>
+  </section>
+
+  <!-- Database & RAG -->
+  <section class="mb-12 page-break">
+    <h3 class="text-lg font-bold text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-2 mb-4">5. Temporal Storage & Chronos-RAG Copilot</h3>
+    
+    <h4 class="text-sm font-bold text-slate-800 mb-2">TimescaleDB Hypertables</h4>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      Structured violation metadata (timestamp, plate, violation class, coordinate, confidence) is stored in TimescaleDB. The database partitions the data into chunks based on time (hypertables). This prevents time-series query degradation, ensuring indexing remains flat regardless of scale.
+    </p>
+
+    <h4 class="text-sm font-bold text-slate-800 mt-6 mb-2">LangChain SQL Agent & Time-Series Vector Search</h4>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      The RAG Copilot translates natural language instructions into PostgreSQL queries:
+    </p>
+    <div class="bg-slate-900 text-slate-200 rounded p-4 mb-4 text-xs font-mono">
+<span class="text-blue-400">SELECT</span> <span class="text-emerald-400">COUNT</span>(*), camera <span class="text-blue-400">FROM</span> violations 
+<span class="text-blue-400">WHERE</span> timestamp &gt;= <span class="text-emerald-400">NOW</span>() - <span class="text-amber-400">INTERVAL '1 day'</span> 
+<span class="text-blue-400">AND</span> violation_type = <span class="text-amber-400">'NO_HELMET'</span> 
+<span class="text-blue-400">GROUP BY</span> camera;
+    </div>
+    <p class="text-slate-650 leading-relaxed text-sm">
+      This SQL conversion enables natural language searches like: <em>"How many helmet violations occurred at Central Silk Board Junction today?"</em>. Furthermore, for queries requiring semantic matching within a specific time frame, pgvector executes similarity searches constrained strictly to relevant hypertables, preventing full database scan latency.
+    </p>
+  </section>
+
+  <!-- Deployment & Performance Evaluation -->
+  <section class="mb-12 page-break">
+    <h3 class="text-lg font-bold text-slate-800 uppercase tracking-wide border-b border-slate-200 pb-2 mb-4">6. Infrastructure & Performance Evaluation</h3>
+    
+    <h4 class="text-sm font-bold text-slate-800 mb-2">Deployment Model</h4>
+    <p class="text-slate-650 leading-relaxed mb-4 text-sm">
+      To handle city-wide camera scaling without network congestion, the prototype utilizes:
+    </p>
+    <ul class="list-disc list-inside space-y-1.5 text-xs text-slate-700 pl-4 mb-6">
+      <li><strong>AWS Wavelength (5G Edge MEC):</strong> YOLOv12 models are deployed on edge nodes within telecom 5G networks, ensuring single-digit millisecond latency processing.</li>
+      <li><strong>Asynchronous Queues:</strong> Celery and Redis manage heavier analytical queries and TrOCR inference to keep the operator frontend non-blocking.</li>
+      <li><strong>Bandwidth Optimization:</strong> Only violation JSON metadata and license Crops are uploaded to the cloud, preserving local network bandwidth.</li>
+    </ul>
+
+    <h4 class="text-sm font-bold text-slate-800 mb-2">Performance Metrics</h4>
+    <table class="min-w-full divide-y divide-slate-200 text-xs text-slate-700 mt-4 border border-slate-200 rounded">
+      <thead class="bg-slate-100">
+        <tr>
+          <th class="px-4 py-2 text-left font-bold border-b">Metric</th>
+          <th class="px-4 py-2 text-left font-bold border-b">Target</th>
+          <th class="px-4 py-2 text-left font-bold border-b">Method</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <tr>
+          <td class="px-4 py-2.5 font-semibold">Object Detection mAP50-95</td>
+          <td class="px-4 py-2.5">&ge; 82.5%</td>
+          <td class="px-4 py-2.5">Evaluated against custom Indian Traffic Datasets.</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2.5 font-semibold">OCR Character Error Rate (CER)</td>
+          <td class="px-4 py-2.5">&le; 1.8%</td>
+          <td class="px-4 py-2.5">Measured on warped/night-time license plate test sets.</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2.5 font-semibold">End-to-End Latency</td>
+          <td class="px-4 py-2.5">&le; 33ms (30 FPS)</td>
+          <td class="px-4 py-2.5">Profiles frame ingestion to metadata output.</td>
+        </tr>
+        <tr>
+          <td class="px-4 py-2.5 font-semibold">Reduction in Manual Review</td>
+          <td class="px-4 py-2.5">&ge; 85%</td>
+          <td class="px-4 py-2.5">Challans processed with confidence score &gt; 0.92 (STP).</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+Architectural Concept Note: Automated Photo Identification and Classification for Traffic Violations Using Computer Vision
+Executive Overview and Contextual Architecture
+Bengaluru, globally recognized as the "Silicon Valley of India," faces a compounding infrastructural crisis driven by rapid economic expansion and a vehicle population that now exceeds 10 million1. While the annual population growth rate of the city stands at 3.7%, the growth rate of registered vehicles accelerates at approximately 10%, culminating in a total of over 1.25 crore vehicles navigating a constrained road network of nearly 14,000 kilometers2. To manage this immense volume, the Bengaluru Traffic Police (BTP) has historically relied on initiatives like the B-TRAC project, which utilized a Rs. 217 crore budget to establish the Traffic Management Centre (TMC) on Infantry Road and deploy centrally controlled signaling systems3. Subsequent implementations of Intelligent Traffic Management Systems (ITMS) have achieved notable successes, such as issuing over 50 lakh challans and recovering approximately Rs. 38 crores in fines through automated red-light and speed violation detection6. However, the sheer scale of the ingested traffic data has exposed a critical operational bottleneck: manual review fatigue.
+Traditional enforcement mechanisms require operators at the TMC to manually verify incidents captured by cameras across the city3. Camera hardware inevitably captures degraded imagery due to nighttime conditions, heavy monsoon rains, or erratic vehicle positioning7. When automated Automatic Number Plate Recognition (ANPR) systems misread a license plate—such as confusing the registration of a CB300R motorcycle with an Access 125 scooter due to a single character error—it triggers a chain reaction of manual appeals, email correspondence from aggrieved citizens, and intensive human intervention8. The core pain point for the BTP is not a lack of data, but the cognitive load required to process it. The primary objective of an advanced computer vision architecture is not merely to draw bounding boxes around vehicles, but to execute straight-through processing (STP) that eliminates human validation for the vast majority of generated traffic challans.
+To achieve this in the context of the Flipkart Gridlock Hackathon 2.0, the proposed architecture adopts a "Sponsor-First" methodology, directly addressing the manual review fatigue placed on BTP operators. Furthermore, the frontend execution utilizes the "AA Method" (Tangible Visuals), transforming complex tensor operations, optical character extraction, and vector embeddings into a highly interactive, intuitive React.js dashboard designed specifically for non-technical law enforcement personnel. The backend operates on an advanced, edge-deployed stack comprising PyTorch for deep learning inference, OpenCV for deterministic geometric transformations, LangChain and TimescaleDB-backed Retrieval-Augmented Generation (RAG) for temporal analytics, and Kubernetes over AWS Wavelength for scalable, ultra-low-latency deployment9.
+The following sections detail three highly innovative architectural features designed to demonstrate immense technical depth for the engineering review while prioritizing direct operational usability for the Bengaluru Traffic Police.
+Feature 1: "Lumina-FDA" — Zero-Reference Environmental Adaptation Engine
+The Concept
+Standard Convolutional Neural Network (CNN) and object detection models degrade catastrophically under adverse weather conditions such as rain and fog, or in low-light environments, which are highly prevalent in Bengaluru during the monsoon season and nighttime hours. "Lumina-FDA" is a unified preprocessing pipeline that mathematically restores severely degraded video frames in real-time before they reach the primary violation-detection network. The architecture bypasses traditional, computationally heavy image enhancement techniques by combining two cutting-edge PyTorch-based neural architectures: Zero-Reference Deep Curve Estimation (Zero-DCE) for low-light enhancement12 and Fourier Domain Adaptation (FDA) for weather mitigation7.
+Zero-DCE formulates low-light image enhancement as an image-specific curve estimation task, utilizing a lightweight neural network to directly map an input image to an enhanced output at the pixel level16. Unlike traditional methods that require paired ground-truth reference images for training, Zero-DCE operates without reference images, making it exceptionally fast and suitable for real-time video processing14. The ultra-light backbone uses minimal convolutions—some implementations utilizing as few as 58 weights—to produce a compact enhancement tensor17. Simultaneously, FDA addresses domain shifts caused by rain or fog by computing the Fast Fourier Transform (FFT) of the input image7. It swaps the low-frequency amplitude components of the adverse weather image (which contain the visual "style" of the weather) with those of a clear target domain, while preserving the high-frequency phase components that contain the geometric "content" (such as the edges of vehicles and pedestrians)7.
+How it Solves the Sponsor's Pain Point
+The leading cause of manual review fatigue at the BTP TMC is the "squint factor." Operators are routinely forced to manually enhance, brighten, or zoom into blurry, dark, or foggy CCTV frames to legally verify a license plate, the absence of a seatbelt, or a helmet violation before officially issuing a challan. By autonomously neutralizing environmental variables, the Lumina-FDA pipeline ensures that the downstream vision models—and the human operators overseeing them—only interact with daylight-equivalent, crystal-clear frames. This drastically reduces the false-negative rate of the detection models and eliminates the countless hours operators currently spend manually discarding "unreadable" or "blurry" footage.
+The Visual/Frontend Component
+During a fast-paced three-minute hackathon demonstration, translating deep mathematical transformations into a tangible user experience is critical. This feature will be presented on the React.js dashboard as the "Night-to-Day Slider."
+The dashboard will feature a prominent video feed utilizing a customized react-compare-slider component. As the demonstration begins, the interface will display a heavily degraded, pitch-black, and rain-distorted traffic feed from a BTP camera. The system will intentionally show the raw YOLOv12 model failing to detect any vehicles or violations. The presenter will then drag the vertical slider across the React canvas from right to left. As the slider moves, the exact same video feed will instantly render as a brightly lit, perfectly clear scene. Neon bounding boxes will immediately snap onto helmets, seatbelts, and license plates. A real-time telemetry widget built with the recharts library will display the frames-per-second (FPS) remaining stable at 30+ FPS, proving to the engineering judges that the Zero-DCE/FDA pipeline adds near-zero latency overhead to the inference loop.
+High-Level Execution
+The execution of the Lumina-FDA pipeline relies on a tightly coupled integration of OpenCV and PyTorch.
+Frame Ingestion & Triage: OpenCV captures the raw RTSP video stream. A lightweight heuristic checks the global pixel intensity and edge variance. If the intensity falls below a predefined threshold, or if the variance indicates atmospheric scattering (fog/rain), the frame is converted to a PyTorch tensor and routed to the Lumina-FDA pipeline.
+Low-Light Enhancement (Zero-DCE): The tensor is passed through the Zero-DCE CNN. PyTorch applies the estimated spatial curves pixel-wise to dynamically adjust the dynamic range, illuminating the dark regions without overexposing already bright areas such as streetlights or headlights14.
+Weather Mitigation (FDA): The PyTorch torch.fft.fftn function computes the 2D discrete Fourier transform of the frame. The central low-frequency amplitudes are attenuated and mapped closer to a clear-weather prior distribution7.
+Inverse Transform: An Inverse Fast Fourier Transform (IFFT) reconstitutes the spatial image7.
+Handoff: The restored tensor is converted back to an OpenCV format and handed to the primary object detection network.
+The quantitative impact of such domain adaptation is substantial, as demonstrated in benchmark studies utilizing FDA on adverse weather datasets.
+
+Performance Metric
+Baseline Model Performance
+Performance with FDA Enhancement
+Percentage Improvement
+Precision
+68.42%
+76.11%
++7.69%7
+Recall
+54.20%
+74.11%
++19.91%7
+mAP50
+62.15%
+78.00%
++15.85%7
+mAP50-95
+35.40%
+59.21%
++23.81%7
+Feature 2: "Omni-Gaze" — Contextual Multi-Stage Violation & Perspective-Corrected OCR Pipeline
+The Concept
+A basic YOLO bounding-box implementation is insufficient for the chaotic and densely packed nature of Indian traffic. Detecting a "person" and a "motorcycle" in a frame does not automatically equate to a triple-riding violation, nor does detecting a "helmet" mean the rider is actually wearing it securely. Furthermore, evaluating red-light violations or wrong-side driving requires temporal tracking across multiple frames, not just static object detection.
+"Omni-Gaze" introduces a hierarchical relational network atop the newly released YOLOv12 architecture, combined with deterministic OpenCV geometric unwarping and Transformer-based Optical Character Recognition (TrOCR). YOLOv12 is selected for its Attention-Centric (A2) framework and Residual Efficient Layer Aggregation Networks (R-ELAN), which drastically outperform older YOLO versions in crowded, multi-class environments while maintaining edge-deployment latency19. The system identifies motorcycles, riders, helmets, seatbelts, traffic lights, and license plates. It then utilizes specific algorithms to classify complex violations.
+For license plate extraction, standard OCR engines like Tesseract frequently fail when faced with the skewed, warped, or partially obscured license plates typical of Indian roadways. Omni-Gaze utilizes an OpenCV algorithmic layer to find the four corners of a skewed plate, applies a perspective transform to flatten it22, and passes the normalized, high-resolution crop to a Vision Transformer (TrOCR). Unlike CNN-based OCR that struggles with sequential context, the TrOCR uses a vision encoder to extract image features and a sequence-to-sequence decoder to generate the text string, significantly reducing the character error rate24.
+How it Solves the Sponsor's Pain Point
+The primary failure point of traditional ANPR systems in Bengaluru is the high error rate on slanted or non-standard license plates, resulting in incorrect challans being mailed to innocent citizens8. This generates massive public backlash and requires TMC operators to manually review dispute tickets. By flattening the plate via OpenCV before OCR, and by using a Transformer model that reads whole sequences, Omni-Gaze achieves near-perfect accuracy22. Furthermore, the hierarchical mapping logic prevents false positives—such as flagging a pedestrian walking behind a motorcycle as a "triple rider"—ensuring that every generated alert is actionable and legally sound without requiring human verification.
+The Visual/Frontend Component
+To effectively demonstrate this backend complexity, Omni-Gaze will be showcased via an "Exploded Relational View" on the React.js dashboard.
+When a violation occurs in the main React video player, the video will automatically pause. A sidebar built using framer-motion (a popular React animation library) will smoothly slide into view, displaying a 3D-style structural breakdown of the incident's logic. Rather than just showing a highlighted box, the interface will display a hierarchy tree proving how the AI reached its conclusion:
+Parent Node: Motorcycle ID: #442
+Child Node 1: Rider (Status: Helmet Verified ✅)
+Child Node 2: Pillion 1 (Status: No Helmet ❌)
+Child Node 3: Pillion 2 (Status: No Helmet ❌) -> TRIPLE RIDING TRIGGERED
+Simultaneously, a "Picture-in-Picture" (PiP) module will dynamically display the OCR sequence. It will show the raw, heavily skewed license plate cropped from the frame. A green wireframe will draw over the four corners of the plate, and in a smooth React animation, the skewed polygon will stretch and flatten into a perfect rectangle. The final text string (e.g., KA-03-KY-1234) will type out below it, proving the effectiveness of the OpenCV warping pipeline to the technical judges.
+High-Level Execution
+The Omni-Gaze pipeline executes a sequence of advanced computer vision tasks orchestrating both deep learning models and traditional image processing.
+YOLOv12 Inference & Tracking: The PyTorch YOLOv12 model runs inference to output bounding boxes for multiple classes. Concurrently, a tracking algorithm (such as Deep SORT or ByteTrack) assigns unique IDs to vehicles to maintain object permanence across frames26.
+Relational Violation Logic: Custom Python logic determines the violation based on spatial and temporal relationships.
+Perspective Correction: For license plates, OpenCV (cv2.Canny, cv2.findContours) isolates the exact quadrilateral of the plate28. The cv2.approxPolyDP function identifies the four vertices28. The cv2.getPerspectiveTransform function computes the transformation matrix, and cv2.warpPerspective applies it, correcting the affine and perspective distortion22.
+TrOCR Extraction: The flattened plate crop is passed to the TrOCR processor. The vision encoder extracts features, and the sequence-to-sequence decoder predicts the final text array, successfully parsing Indian license plate formats24.
+The specific violation classification relies on distinct geometric and temporal rulesets, ensuring robust detection across various traffic laws.
+
+Violation Type
+Detection Logic Mechanism
+Required Components
+Helmet / Triple Riding
+Intersection over Union (IoU) mapping. If the centroid of a Person bounding box falls within a Motorcycle bounding box, they are linked. If three persons link to one motorcycle, a triple ride is flagged. Helmet boxes must overlap the upper 20% of a linked Person box to register compliance30.
+YOLOv12 (Classes: Person, Motorcycle, Helmet), IoU Calculation Script.
+Red-Light Jumping
+Digital Tripwire. The system identifies the traffic light state. If red, a vertical Y-coordinate line is established. If a tracked vehicle's bottom Y-coordinate crosses from before the line to after the line while the light is red, a violation is recorded26.
+YOLOv12, Object Tracker (Deep SORT), Coordinate History Array.
+Wrong-Side Driving
+Trajectory Analysis. The system monitors the movement vector of the tracked vehicle ID. If the vector direction opposes the predefined legal flow direction for that specific lane polygon, it flags a violation.
+Object Tracker, Polygon Region of Interest (ROI) Mapping.
+Seatbelt Non-Compliance
+Cabin Interior Detection. A specialized YOLO head looks specifically through the windshield Region of Interest of a detected 4-wheeler to identify the presence of the diagonal seatbelt strap across the driver's torso32.
+YOLOv12 (Classes: Car, Driver, Seatbelt), High-resolution frame crop.
+Feature 3: "Chronos-RAG" — Temporal Conversational Analytics & Auto-Ticketing Agent
+The Concept
+Traditional traffic management dashboards force operators to manually filter through date ranges, vehicle classes, and violation types using rigid drop-down menus to compile end-of-day analytics or file legal First Information Reports (FIRs)32. "Chronos-RAG" revolutionizes this by leveraging a state-of-the-art Retrieval-Augmented Generation (RAG) architecture tailored specifically for time-series events. It utilizes LangChain, OpenAI or local Large Language Models (LLMs), and PostgreSQL augmented with the pgvector and TimescaleDB extensions11.
+Every time the Omni-Gaze pipeline detects a violation, the metadata—including the timestamp, location coordinates, violation type, vehicle ID, extracted text, and bounding box arrays—is embedded as a vector and stored in TimescaleDB11. While standard vector databases struggle with chronological filtering, TimescaleDB partitions this vector data by time (hypertables), solving the massive performance bottleneck associated with querying sequential events11. A LangChain SQL Agent equipped with tool-calling capabilities is deployed on top of this database, enabling natural language interactions with structured traffic data37.
+How it Solves the Sponsor's Pain Point
+The manual drafting of daily reports, legal notices, and compliance analytics consumes a vast portion of a BTP officer's shift. Chronos-RAG transitions the TMC system from a tedious "click-and-search" paradigm to a fluid "conversational command" paradigm. If a senior officer requests a report on the effectiveness of a new traffic initiative (e.g., assessing if wrong-side driving decreased after installing new signage), the operator does not need to export CSVs or build pivot tables. They simply ask the system in plain English or Kannada. Furthermore, the LLM autonomously drafts legally sound e-challan descriptions based on the extracted vision data, completely removing the operator's data-entry burden and streamlining the postal or SMS notification workflow25.
+The Visual/Frontend Component
+This feature will be demonstrated via the "Traffic-GPT Overlay" on the React application.
+On the dashboard, a sleek chat interface persists on the right-hand side of the screen. The presenter will type a complex natural language query into the chat box, such as:
+"Show me a breakdown of all wrong-side driving and helmet violations at the Infantry Road junction between 8 AM and 10 AM today, and compare it to the same time window last Tuesday."
+The frontend will stream the LLM's thought process via WebSockets, creating an engaging live experience. Within seconds, the chat interface will not only reply with a textual summary but will dynamically render a Recharts bar graph directly inside the chat window, illustrating the data.
+To demonstrate the auto-ticketing feature, the presenter will click on a specific violation data point from the graph. The LLM will instantly generate a ready-to-mail legal notice: "Notice: Vehicle KA-01-AB-9999 was recorded at 08:14 AM on Infantry Road committing a Section 119/177 MV Act violation (Wrong Side Driving). Photographic evidence attached." The presenter will then click a single "Approve & Dispatch" button, demonstrating the end-to-end automation of the e-challan generation workflow, proving that the system can immediately interface with the state's postal or SMS APIs6.
+High-Level Execution
+The execution of Chronos-RAG involves seamlessly connecting vision outputs to database storage and LLM retrieval logic.
+Data Ingestion & Embedding: The JSON output from the YOLO/OpenCV pipeline is parsed. A unique identifier is generated based on the specific incident timestamp using TimescaleDB's uuid_from_time function11. The text metadata is passed through an embedding model and stored in the pgvector columns alongside standard relational data.
+LangChain SQL Agent Orchestration: When a user submits a natural language query, the LangChain create_sql_agent is invoked37. The LLM analyzes the prompt and utilizes injected database tools (e.g., sql_db_list_tables, sql_db_schema) to construct a valid, syntactically correct PostgreSQL query38.
+Temporal Vector Search: For queries requiring semantic matching within a specific time frame, the LangChain agent constructs a query that filters the TimescaleDB partitions by the datetime range before executing the K-Nearest Neighbor (KNN) vector similarity search. This three-step process—filtering partitions, performing similarity search, and combining results—ensures ultra-fast retrieval even across millions of records11.
+Response Generation & Formatting: The database returns the structured data. The LLM synthesizes this into a natural language response or formats it as JSON chart data. A FastAPI backend streams this payload to the React.js client asynchronously34.
+The integration of TimescaleDB offers significant advantages over standard vector databases for traffic law enforcement applications, where time is the most critical axis of measurement.
+
+Database Architecture
+Temporal Search Methodology
+Performance on Time-Series Data
+Standard Vector DB (e.g., Pinecone, standard pgvector)
+Performs similarity search across the entire vector space first, then applies time-based metadata filters post-retrieval.
+Inefficient. Scanning millions of non-relevant historical records causes massive latency spikes.
+TimescaleDB + pgvector
+Partitions data by time (hypertables). Filters out irrelevant time partitions first, then performs similarity search only within the relevant timeframe11.
+Highly optimized. Enables instant retrieval of events constrained by precise date and time boundaries11.
+Scalability and Edge Deployment Infrastructure
+To ensure these highly complex computer vision and LLM pipelines can operate in a live production environment handling thousands of camera feeds across Bengaluru without crashing, the architecture mandates a robust, distributed infrastructure. Processing high-resolution video streams requires specialized deployment strategies to prevent bandwidth saturation and ensure ultra-low-latency inference.
+AWS Wavelength and Edge Inference
+Sending raw 4K video streams from the 14,000 kilometers of Bengaluru roads directly to a centralized cloud server would saturate municipal bandwidth and introduce massive latency, rendering real-time violation detection impossible2. The solution utilizes AWS Wavelength and Amazon Elastic Kubernetes Service (EKS)9.
+AWS Wavelength brings AWS compute and storage services to the edge of communication service providers' 5G networks9. By deploying the PyTorch YOLOv12 and Lumina-FDA models on EKS nodes located within these Wavelength Zones, the video feed is processed mere milliseconds from the physical traffic camera, acting as a Multi-access Edge Computing (MEC) site10. The data from the cameras reaches the application servers without ever leaving the telecommunications network, avoiding multiple internet hops9. Once the local inference detects an incident, only the lightweight metadata—the JSON payload of the violation details and the highly compressed, cropped image of the license plate—is transmitted back over secure tunnels to the central AWS Region for long-term storage in TimescaleDB42. This paradigm shift from centralized processing to edge processing is critical for scaling the system city-wide.
+Asynchronous Task Queues with Celery and Redis
+To ensure the React.js frontend remains completely non-blocking and highly responsive for the TMC operators, all heavy post-processing tasks are decoupled from the main application thread. The system utilizes FastAPI to provide asynchronous request handling, which serves as the primary gateway between the frontend and the backend34.
+When a complex operation is required—such as executing the TrOCR inference on a difficult license plate or running an extensive LangChain database query for analytics—FastAPI pushes the task to a Redis message broker34. Celery workers, running on isolated Kubernetes pods, pick up these tasks from the Redis queue, execute the necessary computations, and return the results34. This architecture guarantees that sudden spikes in traffic violations (e.g., during peak rush hour) do not degrade the performance of the dashboard. The Kubernetes Horizontal Pod Autoscaler can dynamically spin up additional Celery worker pods to handle increased loads, isolating the query-serving infrastructure from the data ingestion pipelines34.
+Comprehensive Metric Observability
+To maintain the health and legal integrity of the system, comprehensive observability tools are mandatory. Prometheus and Grafana are deployed within the Kubernetes cluster to continuously monitor critical telemetry. This includes tracking hardware utilization across the GPU edge nodes, monitoring YOLOv12 inference times to ensure they remain within the target threshold of single-digit milliseconds9, and tracking OCR character error rates. If the system detects a spike in OCR failures at a specific junction, it can automatically alert the maintenance crew that a camera lens may require physical cleaning, ensuring the continuous operational readiness of the BTP's enforcement network.
+Strategic Conclusion
+The "Automated Photo Identification and Classification" system outlined in this architectural concept note transcends standard tutorial-level computer vision scripts by addressing the harsh realities of urban traffic management in India. By deeply integrating Lumina-FDA for unprecedented weather and lighting resilience, Omni-Gaze for mathematically robust perspective correction and multi-class relational mapping, and Chronos-RAG for conversational, temporal analytics, the architecture systematically dismantles the core operational bottlenecks of the Bengaluru Traffic Police.
+This infrastructure is not merely a bounding-box detection tool; it is a comprehensive, edge-deployed automation engine designed to operate securely and efficiently across a massive metropolis. By utilizing AWS Wavelength for zero-latency processing and translating deep learning tensors into an interactive, highly visual React.js interface, this solution guarantees a monumental reduction in manual review fatigue for the TMC operators. The architecture promises to dramatically accelerate the issuance of verifiable, dispute-free e-challans, thereby enforcing traffic discipline, increasing municipal revenue collection, and advancing the fundamental safety of Bengaluru's roadways for its citizens.
+Works cited
+Smart Traffic Management in Bengaluru | PDF - Scribd, https://www.scribd.com/document/920812240/Prw
+Home minister Priyank Kharge wants strict enforcement of traffic rules in Bengaluru, https://www.newindianexpress.com/cities/bengaluru/2026/Jun/13/home-minister-priyank-kharge-wants-strict-enforcement-of-traffic-rules-in-bengaluru
+Bangalore City Traffic Police - Wikipedia, https://en.wikipedia.org/wiki/Bangalore_City_Traffic_Police
+Know Your City: A museum that chronicles the history of traffic management in Bengaluru | Bangalore News - The Indian Express, https://indianexpress.com/article/cities/bangalore/know-your-city-museum-history-of-traffic-management-bengaluru-9855026/
+“B-TRAC – Technology Driven Traffic Management”, https://bprd.nic.in/uploads/pdf/201702101040338492118BTRACcoverpage.pdf
+AI Use Case Compendium Book.cdr - NITI for States, https://www.nitiforstates.gov.in/public-assets/Best_Practices/Compendiums/Artificial%20Intelligence%20use%20case%20compendium.pdf
+TLDR: Traffic Light Detection using Fourier Domain Adaptation in Hostile WeatheR - arXiv, https://arxiv.org/html/2411.07901v1
+How to get rid of incorrect traffic violation challans in Bangalore? - Team-BHP, https://www.team-bhp.com/news/how-get-rid-incorrect-traffic-violation-challans-bangalore
+Edge Computing with AWS Infrastructure Solutions - awsstatic.com, https://d1.awsstatic.com/product-marketing/Outposts/AWS%20Infrastructure%20Solution%20Brief.pdf
+What AWS Wavelength EKS Actually Does and When to Use It - hoop.dev, https://hoop.dev/blog/what-aws-wavelength-eks-actually-does-and-when-to-use-it
+Timescale Vector x LangChain: Making PostgreSQL A Better Vector Database for AI Applications, https://www.langchain.com/blog/timescale-vector-x-langchain-making-postgresql-a-better-vector-database-for-ai-applications
+Li-Chongyi/Zero-DCE: Zero-DCE code and model - GitHub, https://github.com/Li-Chongyi/Zero-DCE
+Zero DCE PyTorch Model - Model Zoo, https://modelzoo.co/model/zero-dce
+BBM 444 – Programming Assignment 4: Deep Low-light Image Enhancement, https://web.cs.hacettepe.edu.tr/~erkut/bbm444.s22/assgns/assgn4.pdf
+Fourier Domain Adaptation for Traffic Light Detection in Adverse Weather - arXiv, https://arxiv.org/abs/2411.07901
+Efficient Gamma-Based Zero-Reference Deep Curve Estimation for Low-Light Image Enhancement - MDPI, https://www.mdpi.com/2076-3417/15/13/7382
+Towards Lightest Low-Light Image Enhancement Architecture for Mobile Devices - arXiv, https://arxiv.org/html/2507.04277v1
+Condition-Invariant Semantic Segmentation - ETH Zürich, http://people.ee.ethz.ch/~csakarid/CISS/Condition-invariant_semantic_segmentation-Sakaridis+Bruggemann+Yu+Van_Gool-IEEE_TPAMI_2025.pdf
+Benchmarking YOLOv8–YOLOv12 for Real-Time Object Detection on Single-Board Computers - Preprints.org, https://www.preprints.org/manuscript/202605.0936
+YOLOv12: State-of-the-Art Object Detection Model, https://yolov12.com/
+YOLO Evolution: A Comprehensive Benchmark and Architectural Review of YOLOv12, YOLO11, and Their Previous Versions - arXiv, https://arxiv.org/html/2411.00201v2
+Perspective Transform Warping with OpenCV - Studyopedia, https://studyopedia.com/opencv/perspective-transform-warping-opencv/
+Robust License Plate Recognition in OCC-Based Vehicle Networks Using Image Reconstruction - MDPI, https://www.mdpi.com/1424-8220/24/20/6568
+Intelligent Traffic Surveillance for Real-Time Vehicle Detection, License Plate Recognition, and Speed Estimation - arXiv, https://arxiv.org/html/2601.00344v1
+Check & Pay Karnataka Traffic Challan Online - ACKO, https://www.acko.com/traffic-rules/e-challan-karnataka/
+Building a Traffic-Light Violation Detector - Python in Plain English, https://python.plainenglish.io/automating-road-safety-traffic-light-violation-detector-973885dbe977
+Challenges in Automatic License Plate Recognition System: An Indian Scenario | Request PDF - ResearchGate, https://www.researchgate.net/publication/354108281_Challenges_in_Automatic_License_Plate_Recognition_System_An_Indian_Scenario
+License Plate Recognition with OpenCV and Tesseract OCR - GeeksforGeeks, https://www.geeksforgeeks.org/machine-learning/license-plate-recognition-with-opencv-and-tesseract-ocr/
+License plate recognition using OpenCV - GitHub, https://github.com/ikajdan/license_plate_recognition
+Deep Learning-Based Real-Time Detection of Helmet Non-Compliance and Triple Riding Violations in Traffic Surveillance Systems, https://ijdim.com/journal/index.php/ijdim/article/view/617
+Discover Artificial Intelligence - Automatic two‑wheeler rider identification and triple‑riding detection in surveillance systems using deep‑learning models, https://d-nb.info/1374268216/34
+Bengaluru Traffic Authority - Videonetics, https://www.videonetics.com/case-study/bengaluru-traffic-authority
+Mobility - Integrated Command and Control Centre (ICCC), https://iccc.niua.org/iccc/sector/use-case/815e6212def15fe76ed27cec7a393d59
+Engineering a Production RAG-Based Agent Platform - CEUR-WS.org, https://ceur-ws.org/Vol-4211/paper05.pdf
+Edit Fields (Set) integrations | Workflow automation with n8n, https://n8n.io/integrations/set/
+Strategic traffic violation detection system - World Journal of Advanced Research and Reviews, https://wjarr.com/sites/default/files/fulltext_pdf/WJARR-2025-4298.pdf
+create_sql_agent | langchain_community - LangChain Reference, https://reference.langchain.com/python/langchain-community/agent_toolkits/sql/base/create_sql_agent
+Build a SQL agent - Docs by LangChain, https://docs.langchain.com/oss/python/langchain/sql-agent
+Build a custom SQL agent - Docs by LangChain, https://docs.langchain.com/oss/python/langgraph/sql-agent
+Divergent Technologies: IT Solutions Overview | PDF | Automation - Scribd, https://www.scribd.com/document/902940854/Divergent-Technologies-Limited-Portfolio
+AWS Global Network, https://aws.amazon.com/about-aws/global-infrastructure/global-network/
+Distributed inference with collaborative AI agents for Telco-powered Smart-X - AWS, https://aws.amazon.com/blogs/industries/distributed-inference-with-collaborative-ai-agents-for-telco-powered-smart-x/
+Real World Projects That Get You Hired as Python Developer - NareshIT, https://nareshit.com/blogs/real-world-projects-that-get-you-hired-as-a-python-developer
+Talent Skilled in TensorFlow - Reval, https://www.reval.site/talent/skilled-in/tensorflow?page=233
+Back-end Developer (Python, FastAPI, Postgres) at SpeakUp - Remocate, https://www.remocate.app/jobs/backend-developer-python-fastapi-postgres-speakup

@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+opencv-python
+ultralytics
+inference
+inference-sdk
+easyocr
+python-multipart
+pydantic
+numpy
+requests

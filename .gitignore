@@ -1,0 +1,42 @@
+# Dependency directories
+node_modules/
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# OS-generated files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# Archives and media files
+archive/
+archive.zip
+*.mp4
+*.zip
+*.tar.gz
+*.tgz
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE configurations
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
