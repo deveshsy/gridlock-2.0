@@ -229,7 +229,7 @@ export default function VideoInferencePlayer({ latestViolation, frameIndex, acti
         {isFeedActive && (
           <video
             ref={videoRef}
-            src="/output_annotated.mp4"
+            src="/cctv_1_processed.mp4"
             autoPlay
             muted
             playsInline
