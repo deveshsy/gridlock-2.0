@@ -1,6 +1,6 @@
-# ASTraM / OMNI-GAZE Traffic Management Centre (TMC) Dashboard
+# OMNI-GAZE Traffic Management Centre (TMC) Dashboard
 
-OMNI-GAZE is an AI-powered next-generation traffic violation detection and enforcement dashboard built for the Bengaluru Traffic Police (BTP) as part of the Flipkart GRiD Hackathon. The platform accelerates straight-through processing (STP) of traffic challans, addressing manual review fatigue and operational bottlenecks at the Infantry Road Traffic Management Centre (TMC).
+OMNI-GAZE is an AI-powered next-generation traffic violation detection and enforcement dashboard built for the Bengaluru Traffic Police (BTP) as part of the Flipkart Gridlock 2.0 Hackathon. The platform accelerates straight-through processing (STP) of traffic challans, addressing manual review fatigue and operational bottlenecks at the Infantry Road Traffic Management Centre (TMC).
 
 ---
 
