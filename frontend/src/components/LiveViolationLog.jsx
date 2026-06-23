@@ -6,6 +6,54 @@ export default function LiveViolationLog({ activeViolations, onSelectViolation }
   const [searchTerm, setSearchTerm] = useState('');
   const [severityFilter, setSeverityFilter] = useState('ALL');
 
+  const handleExportPDF = async (violation) => {
+    try {
+      // Map severity to fine amount
+      let fineAmount = 500;
+      if (violation.severity === 'critical') fineAmount = 1000;
+      else if (violation.severity === 'high') fineAmount = 700;
+
+      let formattedTime = violation.timestamp;
+      try {
+        formattedTime = new Date(violation.timestamp).toLocaleString();
+      } catch (err) {
+        // fallback
+      }
+
+      const response = await fetch('http://localhost:8001/api/generate-challan', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          license_plate: violation.plate,
+          violation_type: violation.type,
+          camera_node: violation.camera,
+          timestamp: formattedTime,
+          fine_amount: fineAmount
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      // Download the PDF blob in the browser
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `BTP_Challan_${violation.plate}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to export PDF. Please check if the backend server is running on port 8001.');
+    }
+  };
+
   // Filter logs based on search query and severity selector
   const filteredViolations = activeViolations.filter(v => {
     const matchesSearch = v.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -187,7 +235,7 @@ export default function LiveViolationLog({ activeViolations, onSelectViolation }
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          alert(`Exporting citation record for ${violation.id} to PDF...`);
+                          handleExportPDF(violation);
                         }}
                         className="px-2 py-1 bg-slate-100 hover:bg-slate-200 active:bg-slate-300 text-slate-700 text-[9px] font-bold uppercase tracking-wider rounded border border-slate-200 transition-all cursor-pointer font-sans"
                       >

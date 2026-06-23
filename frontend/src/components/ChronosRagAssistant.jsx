@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, X, Bot, User, Terminal, Eye, CornerDownLeft, AlertCircle } from 'lucide-react';
 
-export default function ChronosRagAssistant({ isOpen, onClose, activeViolations, onActivateCamera, isStreaming, onSetStreaming }) {
+export default function ChronosRagAssistant({ isOpen, onClose, activeViolations, onActivateCamera, isStreaming, onSetStreaming, setGreenCorridorActive }) {
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -39,10 +39,10 @@ export default function ChronosRagAssistant({ isOpen, onClose, activeViolations,
 
   // Suggested Prompts
   const suggestedPrompts = [
-    "Open Begum Amin Road Cam",
-    "Report for Wrong-Side Driving",
-    "Identify peak violation types",
-    "Explain average accuracy score"
+    "Triple riding on Begum Amin Road",
+    "Lookup vehicle plate KA-03-HA-8821",
+    "Show safety hotspots",
+    "Signal timing recommendation"
   ];
 
   const handleSendMessage = (textToSend) => {
@@ -61,12 +61,57 @@ export default function ChronosRagAssistant({ isOpen, onClose, activeViolations,
     setInput('');
     setIsThinking(true);
 
-    // AI Thinking state simulation with RAG retrieval sub-steps
-    const steps = [
+    const normQuery = query.toLowerCase();
+    const isGreenCorridorQuery = normQuery.includes('green corridor') && (normQuery.includes('hospital') || normQuery.includes('emergency'));
+
+    if (isGreenCorridorQuery && setGreenCorridorActive) {
+      setGreenCorridorActive(true);
+    }
+    
+    // Choose thinking steps based on query
+    let steps = [
       'Scanning local chroma vectors...',
       'Retrieving violation records...',
       'Synthesizing contextual response...'
     ];
+    
+    if (isGreenCorridorQuery) {
+      steps = [
+        'Locating active transit paths to Apollo Hospital...',
+        'Chronos is authenticating security override token...',
+        'Broadcasting signal grid control override signals...'
+      ];
+    } else if (normQuery.includes('triple riding') && (normQuery.includes('begum amin') || normQuery.includes('begur amin') || normQuery.includes('amin road'))) {
+      steps = [
+        'Searching chroma vector index for "triple riding"...',
+        'Filtering results on node "CAM-BEGUM-AMIN-ROAD"...',
+        'Extracting target bounding box and license plate...'
+      ];
+    } else if (normQuery.includes('helmet') && normQuery.includes('stats')) {
+      steps = [
+        'Querying daily violation database for "No Helmet"...',
+        'Calculating hourly frequency distribution...',
+        'Aggregating spatial hotspots...'
+      ];
+    } else if (normQuery.includes('critical') || normQuery.includes('risk') || normQuery.includes('alert') || normQuery.includes('hotspot')) {
+      steps = [
+        'Retrieving active critical incidents list...',
+        'Checking dispatcher connection status...',
+        'Validating geolocation data...'
+      ];
+    } else if (normQuery.includes('lookup') || normQuery.includes('plate') || normQuery.includes('vahan')) {
+      steps = [
+        'Connecting to BTP Vahan Database API...',
+        'Searching vehicle registration for plate index...',
+        'Parsing owner credentials and active citations...'
+      ];
+    } else if (normQuery.includes('congestion') || normQuery.includes('signal') || normQuery.includes('timing')) {
+      steps = [
+        'Aggregating traffic congestion flow metrics...',
+        'Calculating junction waiting time index...',
+        'Drafting signal cycle optimization rules...'
+      ];
+    }
 
     let stepIdx = 0;
     setThinkingStep(steps[0]);
@@ -78,15 +123,44 @@ export default function ChronosRagAssistant({ isOpen, onClose, activeViolations,
       }
     }, 500);
 
-    // Simulate RAG response after 1.5 seconds
+    // Simulate RAG response with custom delay
+    const delayTime = isGreenCorridorQuery ? 1200 : 1500;
     setTimeout(() => {
       clearInterval(stepInterval);
       setIsThinking(false);
 
       let reply = '';
-      const normQuery = query.toLowerCase();
 
-      if (normQuery.includes('begum amin') || normQuery.includes('begur amin') || normQuery.includes('amin road') || normQuery.includes('begumamin') || normQuery.includes('beguramin')) {
+      if (isGreenCorridorQuery) {
+        if (setGreenCorridorActive) {
+          setGreenCorridorActive(true);
+        }
+        reply = `⚠️ EMERGENCY PROTOCOL INITIATED. Encryption Token Validated. Signal grid overrides dispatched along the route to Apollo Hospital. Ground directives synchronized.`;
+      } else if (normQuery.includes('triple riding') && (normQuery.includes('begum amin') || normQuery.includes('begur amin') || normQuery.includes('amin road') || normQuery.includes('begumamin') || normQuery.includes('beguramin'))) {
+        reply = `Searching BTP RAG Vector Store... 1 Match Found. \nViolation: Triple Riding \nLocation: Begum Amin Road Cam \nPlate: KA-03-HA-8821 \nConfidence: 94%. \nWould you like me to draft an E-Challan for this incident?`;
+      } else if (normQuery.includes('helmet') && normQuery.includes('stats')) {
+        reply = `Analyzing daily logs... There have been 14 'No Helmet' violations flagged across all active nodes in the last 2 hours. Peak frequency occurred at Silk Board Junction.`;
+      } else if (normQuery.includes('critical') || normQuery.includes('risk') || normQuery.includes('alert')) {
+        reply = `Scanning active alerts... Detected 3 high-severity Wrong-Side Driving events on Begum Amin Road Cam in the last hour. All dispatch statuses are: ACTIVE - BTP Rapid Response Team en route.`;
+      } else if (normQuery.includes('lookup') || normQuery.includes('plate') || normQuery.includes('vahan')) {
+        reply = `Connecting to BTP Vahan Database Registry API...\n\nLicense Plate: KA-03-HA-8821\nVehicle Owner: Rajesh Kumar Gowda\nVehicle Class: Two-Wheeler (Honda Activa 6G)\nRegistration Date: 12-Oct-2022\nActive Challans Pending: 2 (Total Fine: ₹1,000)\n\nNote: License status is active. Owner details mapped to citation index.`;
+      } else if (normQuery.includes('congestion') || normQuery.includes('signal') || normQuery.includes('timing')) {
+        reply = `Retrieving historical traffic flow telemetry for CAM-BEGUM-AMIN-ROAD...\n\nCongestion Index: 7.2/10 (High)\nPeak congestion observed: 09:30 AM - 11:00 AM and 05:45 PM - 07:15 PM.\n\nRecommendation: Adjust signaling cycle on Begum Amin Intersection to +20 seconds green-time to clear inbound queues.`;
+      } else if (normQuery.includes('hotspot') || normQuery.includes('safety')) {
+        reply = `Generating spatial density map of safety violations (last 24 hours)...\n\nTop Hotspots:\n1. Begum Amin Road Cam (12 incidents of Wrong-Side Driving) - Risk Score: CRITICAL\n2. Silk Board Underpass (8 incidents of Lane Splitting) - Risk Score: HIGH\n3. Hebbal Outer Ramp (4 incidents of Speeding) - Risk Score: MEDIUM\n\nPlan: Suggesting BTP patrol placement at Begum Amin exit lane during shift change.`;
+      } else if (normQuery.includes('dispatch') || normQuery.includes('auto-intercept')) {
+        reply = `BTP Dispatch Automation System Status: ONLINE.\n\nRule Profile: Automatically dispatch intercept unit if:\n- Severity = CRITICAL\n- Confirmed Confidence > 92%\n\nTrigger Event: Wrong-Side Driving detected on CAM-BEGUM-AMIN-ROAD.\nStatus: Intercept Unit B-12 dispatched automatically (ETA: 4 minutes).`;
+      } else if (normQuery.includes('system') || normQuery.includes('health') || normQuery.includes('gpu') || normQuery.includes('latency')) {
+        reply = `OMNI-GAZE System Telemetry Diagnostics:\n- Active Camera Streams: 3/4\n- AI Edge Model Load: 74%\n- GPU Temperature: 68°C\n- Average Inference Latency: 38ms\n- Frame Processing Rate: 30 FPS\n- Network Upload Health: 99.9%`;
+      } else if (normQuery.includes('camera') || normQuery.includes('cameras') || normQuery.includes('node') || normQuery.includes('nodes')) {
+        reply = `BTP edge registry retrieved:\n- CAM-BEGUM-AMIN-ROAD (Active, 30 FPS, HD Stream)\n- CAM-SILK-BOARD (Active, 30 FPS, SD Stream)\n- CAM-HEBBAL-FLYOVER (Active, 30 FPS, SD Stream)\n- CAM-OUTER-RING-ROAD (Standby, node health 99.8%)`;
+      } else if (normQuery.includes('accuracy') || normQuery.includes('performance') || normQuery.includes('metrics')) {
+        reply = `Model Performance Metrics:\n- Average Inference Confidence: 92.5%\n- False Positive Rate: < 1.4%\n- Inference Node Latency: 42ms\n- Precision-Recall AUC: 0.965`;
+      } else if (normQuery.includes('challan') || normQuery.includes('e-challan')) {
+        reply = `E-Challan automation status: ACTIVE.\nIntegrated with BTP Vahan Database API.\nTo draft an E-Challan, select any log entry from the Real-Time Violation Feed on your dashboard and click [ Issue E-Challan ].`;
+      } else if (normQuery.includes('weekly') || normQuery.includes('report') || normQuery.includes('summary')) {
+        reply = `Generating Weekly Incident Report Summary...\n\n- Total Inferences Processed: 148,924\n- Confirmed Violations: 1,842\n- E-Challans Dispatched: 1,622\n- Collection Rate: 78.4%\n- Top violation type: No Helmet (54% of total).`;
+      } else if (normQuery.includes('begum amin') || normQuery.includes('begur amin') || normQuery.includes('amin road') || normQuery.includes('begumamin') || normQuery.includes('beguramin')) {
         if (onActivateCamera) {
           onActivateCamera('CAM-BEGUM-AMIN-ROAD');
         }
@@ -104,25 +178,8 @@ export default function ChronosRagAssistant({ isOpen, onClose, activeViolations,
           onSetStreaming(true);
         }
         reply = `[SYSTEM COMMAND INITIATED] Restarting live video feed. Active telemetry analysis resumed at 30 FPS.`;
-      } else if (normQuery.includes('wrong-side') || normQuery.includes('wrong side')) {
-        const wrongSideCount = activeViolations.filter(v => v.type === 'Wrong-Side Driving').length;
-        reply = `Found ${wrongSideCount} active "Wrong-Side Driving" violations in the current loop. The latest involved a White Sedan (Suzuki Dzire) or Black Scooter on CAM-BEGUM-AMIN-ROAD with a confidence score of 92%. Recommendation: Dispatch intercept unit to Begum Amin Road.`;
-      } else if (normQuery.includes('report') || normQuery.includes('viol-')) {
-        const latest = activeViolations.find(v => v.id.startsWith('VIOL-CSB')) || { id: 'VIOL-2026-X', type: 'Unspecified', plate: 'N/A', vehicle: 'Unknown', speed: 0, confidence: 0.90 };
-        reply = `[INCIDENT REPORT GENERATED]
-ID: ${latest.id}
-Type: ${latest.type}
-Target Plate: ${latest.plate}
-Model: ${latest.vehicle}
-Speed Recorded: ${latest.speed} km/h
-Neural Confidence: ${(latest.confidence * 100).toFixed(0)}%
-Status: Logged to BTP database.`;
-      } else if (normQuery.includes('confidence') || normQuery.includes('accuracy')) {
-        reply = `The edge neural array is reporting an Average Inference Accuracy of 92.5% across active cameras. Edge node is running healthy at 99.8%.`;
-      } else if (normQuery.includes('type') || normQuery.includes('peak') || normQuery.includes('violation')) {
-        reply = `Peak violation types detected in this session are "Wrong-Side Driving" (critical risk) and "No Helmet" (medium risk) on CAM-BEGUM-AMIN-ROAD.`;
       } else {
-        reply = `Retrieving database: I found ${activeViolations.length} records matching current session indicators. Active camera channel: CAM-BEGUM-AMIN-ROAD. How else can I assist with surveillance telemetry?`;
+        reply = `Query received. Routing through the Semantic Search Pipeline... Please specify a camera node or violation type to narrow down the context.`;
       }
 
       setMessages(prev => [...prev, {
@@ -131,7 +188,7 @@ Status: Logged to BTP database.`;
         text: reply,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
       }]);
-    }, 1500);
+    }, delayTime);
   };
 
   return (

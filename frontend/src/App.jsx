@@ -8,6 +8,7 @@ import LiveViolationLog from './components/LiveViolationLog';
 import TrafficAnalyticsModule from './components/TrafficAnalyticsModule';
 import ChronosRagAssistant from './components/ChronosRagAssistant';
 import MapplsTrafficMap from './components/MapplsTrafficMap';
+import GreenCorridorPanel from './components/GreenCorridorPanel';
 
 export default function App() {
   const [isStreaming, setIsStreaming] = useState(true);
@@ -16,6 +17,7 @@ export default function App() {
   const [isFeedActive, setIsFeedActive] = useState(false);
   const [violationCount, setViolationCount] = useState(0);
   const [videoFrame, setVideoFrame] = useState(0);
+  const [greenCorridorActive, setGreenCorridorActive] = useState(false);
   
   // Custom hook returns state updated by simulated WebSocket stream synced to the video frame index
   const {
@@ -110,6 +112,8 @@ export default function App() {
               onCameraSelect={handleCameraSelect}
               latestViolation={latestViolation}
               violationCount={violationCount}
+              greenCorridorActive={greenCorridorActive}
+              setGreenCorridorActive={setGreenCorridorActive}
             />
           </div>
 
@@ -162,12 +166,16 @@ export default function App() {
             />
           </div>
 
-          {/* Real-time event log */}
+          {/* Real-time event log / Green Corridor panel */}
           <div className="xl:col-span-4 flex flex-col">
-            <LiveViolationLog
-              activeViolations={isFeedActive ? activeViolations : []}
-              onSelectViolation={handleSelectViolation}
-            />
+            {greenCorridorActive ? (
+              <GreenCorridorPanel onCancel={() => setGreenCorridorActive(false)} />
+            ) : (
+              <LiveViolationLog
+                activeViolations={isFeedActive ? activeViolations : []}
+                onSelectViolation={handleSelectViolation}
+              />
+            )}
           </div>
         </section>
 
@@ -192,6 +200,7 @@ export default function App() {
         }}
         isStreaming={isStreaming}
         onSetStreaming={setIsStreaming}
+        setGreenCorridorActive={setGreenCorridorActive}
       />
 
       {/* Footer bar */}
@@ -201,7 +210,7 @@ export default function App() {
           INFRASTRUCTURE OPERATIONAL & SECURED VIA BTP TECH DIVISION
         </p>
         <div className="flex flex-col items-center gap-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-md shadow-sm">
-          <span className="text-[8px] font-bold text-slate-455 tracking-widest uppercase font-sans leading-none">
+          <span className="text-[8px] font-bold text-slate-400 tracking-widest uppercase font-sans leading-none">
             Powered By
           </span>
           <img 

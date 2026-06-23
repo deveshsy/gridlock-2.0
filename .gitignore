@@ -20,7 +20,6 @@ Thumbs.db
 # Archives and media files
 archive/
 archive.zip
-*.mp4
 *.zip
 *.tar.gz
 *.tgz

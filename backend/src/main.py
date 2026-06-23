@@ -3,6 +3,9 @@ import logging
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Dict, Any
+from pydantic import BaseModel
+from fastapi.responses import FileResponse
+from utils.pdf_generator import generate_echallan_pdf
 
 from src.core.omni_gaze import OmniGazePipeline
 
@@ -99,6 +102,45 @@ async def analyze_frame(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=f"Inference pipeline failed: {str(e)}")
     finally:
         await file.close()
+
+class ChallanRequest(BaseModel):
+    license_plate: str
+    violation_type: str
+    camera_node: str
+    timestamp: str
+    fine_amount: int
+    evidence_image_path: str = None
+
+@app.post("/api/generate-challan")
+async def generate_challan(request: ChallanRequest):
+    """
+    Endpoint to generate and download a Bangalore Traffic Police (BTP) E-Challan PDF document.
+    """
+    try:
+        # Create a temp directory
+        temp_dir = "/tmp/btp_challans"
+        os.makedirs(temp_dir, exist_ok=True)
+        pdf_path = os.path.join(temp_dir, f"btp_challan_{request.license_plate}.pdf")
+        
+        # Generate PDF
+        generate_echallan_pdf(
+            license_plate=request.license_plate,
+            violation_type=request.violation_type,
+            camera_node=request.camera_node,
+            timestamp=request.timestamp,
+            fine_amount=request.fine_amount,
+            evidence_image_path=request.evidence_image_path,
+            output_path=pdf_path
+        )
+        
+        return FileResponse(
+            path=pdf_path,
+            media_type="application/pdf",
+            filename=f"BTP_Challan_{request.license_plate}.pdf"
+        )
+    except Exception as e:
+        logger.error(f"Error generating e-challan PDF: {e}")
+        raise HTTPException(status_code=500, detail=f"Challan generation failed: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
